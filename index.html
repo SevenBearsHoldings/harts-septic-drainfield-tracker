@@ -7,7 +7,7 @@
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
-  --bg:#ffffff;--bg2:#f5f5f3;--bg3:#efefeb;
+  --bg:#ffffff;--bg2:#f5f5f3;
   --text:#1a1a18;--text2:#6b6b68;--text3:#a0a09c;
   --border:rgba(0,0,0,0.12);--border2:rgba(0,0,0,0.22);
   --info-bg:#E6F1FB;--info-text:#0C447C;
@@ -18,7 +18,7 @@
   font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
 }
 @media(prefers-color-scheme:dark){:root{
-  --bg:#1e1e1c;--bg2:#2a2a28;--bg3:#323230;
+  --bg:#1e1e1c;--bg2:#2a2a28;
   --text:#f0f0ec;--text2:#a0a09c;--text3:#6b6b68;
   --border:rgba(255,255,255,0.1);--border2:rgba(255,255,255,0.2);
   --info-bg:#0c2a44;--info-text:#85B7EB;
@@ -53,10 +53,10 @@ body{background:var(--bg);color:var(--text);min-height:100vh;padding:1.25rem}
 .filters{display:flex;gap:6px;flex-wrap:wrap}
 .fbtn{font-size:12px;padding:4px 10px;border-radius:20px;border:0.5px solid var(--border2);background:transparent;color:var(--text2);cursor:pointer}
 .fbtn.active{background:var(--info-bg);color:var(--info-text);border-color:transparent}
-.add-btn{font-size:13px;padding:6px 14px;border-radius:20px;border:0.5px solid var(--border2);background:transparent;color:var(--text);cursor:pointer;white-space:nowrap}
-.add-btn:hover{background:var(--bg2)}
 .sort-btn{font-size:12px;padding:4px 10px;border-radius:20px;border:0.5px solid var(--border2);background:transparent;color:var(--text2);cursor:pointer;white-space:nowrap}
 .sort-btn.active{background:var(--info-bg);color:var(--info-text);border-color:transparent}
+.add-btn{font-size:13px;padding:6px 14px;border-radius:20px;border:0.5px solid var(--border2);background:transparent;color:var(--text);cursor:pointer;white-space:nowrap}
+.add-btn:hover{background:var(--bg2)}
 .job-card{background:var(--bg);border:0.5px solid var(--border);border-radius:var(--radius-lg);padding:0.85rem 1rem;margin-bottom:8px;cursor:pointer}
 .job-card:hover{border-color:var(--border2)}
 .job-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;gap:8px}
@@ -64,33 +64,53 @@ body{background:var(--bg);color:var(--text);min-height:100vh;padding:1.25rem}
 .stage-badge{font-size:11px;padding:3px 8px;border-radius:20px;font-weight:500;white-space:nowrap}
 .job-address{font-size:12px;color:var(--text3);margin-top:2px}
 .job-notes{font-size:12px;color:var(--text2);margin-top:2px}
+.job-task-pill{font-size:11px;color:var(--info-text);background:var(--info-bg);padding:2px 8px;border-radius:20px;margin-top:5px;display:inline-block}
 .stage-bar{display:flex;gap:2px;margin-top:8px}
 .stage-dot{height:4px;flex:1;border-radius:2px;background:var(--border)}
 .stage-dot.done{background:#1D9E75}
 .stage-dot.current{background:#378ADD}
-.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:100;align-items:center;justify-content:center;padding:1rem}
+.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:100;align-items:flex-start;justify-content:center;padding:1rem;overflow-y:auto}
 .overlay.open{display:flex}
-.modal{background:var(--bg);border-radius:var(--radius-lg);border:0.5px solid var(--border2);padding:1.25rem;width:100%;max-width:460px;max-height:88vh;overflow-y:auto}
-.modal h2{font-size:16px;font-weight:500;margin-bottom:1rem}
-.field-lbl{font-size:11px;color:var(--text2);text-transform:uppercase;letter-spacing:0.05em;margin:10px 0 5px}
-.stage-list{display:flex;flex-direction:column;gap:4px}
-.stage-item{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:var(--radius-md);border:0.5px solid var(--border);cursor:pointer;font-size:13px;color:var(--text)}
+.modal{background:var(--bg);border-radius:var(--radius-lg);border:0.5px solid var(--border2);padding:1.25rem;width:100%;max-width:480px;margin:auto}
+.modal h2{font-size:16px;font-weight:500;margin-bottom:0.75rem}
+.field-lbl{font-size:11px;color:var(--text2);text-transform:uppercase;letter-spacing:0.05em;margin:12px 0 5px}
+.stage-list{display:flex;flex-direction:column;gap:4px;max-height:180px;overflow-y:auto}
+.stage-item{display:flex;align-items:center;gap:10px;padding:7px 10px;border-radius:var(--radius-md);border:0.5px solid var(--border);cursor:pointer;font-size:13px;color:var(--text)}
 .stage-item:hover{background:var(--bg2)}
 .stage-item.selected{background:var(--info-bg);border-color:transparent;color:var(--info-text);font-weight:500}
 .stage-num{font-size:11px;color:var(--text3);min-width:18px}
-.grp-lbl{font-size:11px;color:var(--text2);text-transform:uppercase;letter-spacing:0.05em;margin:10px 0 4px}
+.grp-lbl{font-size:11px;color:var(--text2);text-transform:uppercase;letter-spacing:0.05em;margin:8px 0 3px}
 .modal-btns{display:flex;gap:8px;margin-top:1rem}
 .btn{flex:1;padding:8px;border-radius:var(--radius-md);border:0.5px solid var(--border2);background:transparent;color:var(--text);cursor:pointer;font-size:13px;font-family:inherit}
 .btn:hover{background:var(--bg2)}
 .btn.primary{background:var(--info-bg);color:var(--info-text);border-color:transparent;font-weight:500}
 .btn.danger{color:var(--danger-text);border-color:#F09595}
 .btn.danger:hover{background:var(--danger-bg)}
+.divider{border:none;border-top:0.5px solid var(--border);margin:14px 0}
+.tasks-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+.tasks-hdr-lbl{font-size:11px;color:var(--text2);text-transform:uppercase;letter-spacing:0.05em}
+.tasks-hint{font-size:11px;color:var(--text3);margin-top:6px;line-height:1.5}
+.task-add-row{display:flex;gap:6px;margin-bottom:8px}
+.task-add-row input{flex:1;padding:7px 10px;font-size:13px;border:0.5px solid var(--border2);border-radius:var(--radius-md);background:transparent;color:var(--text);font-family:inherit}
+.task-add-row input:focus{outline:none;border-color:#378ADD}
+.task-add-btn{padding:7px 14px;border-radius:var(--radius-md);border:none;background:var(--info-bg);color:var(--info-text);font-size:13px;font-weight:500;cursor:pointer;white-space:nowrap}
+.task-list{display:flex;flex-direction:column;gap:4px}
+.task-item{display:flex;align-items:center;gap:8px;padding:7px 10px;border-radius:var(--radius-md);border:0.5px solid var(--border);background:var(--bg2)}
+.task-check{width:18px;height:18px;border:1.5px solid var(--border2);border-radius:4px;cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center;background:var(--bg);transition:all 0.15s}
+.task-check.done{background:var(--success-bg);border-color:var(--success-text)}
+.task-check.done::after{content:"✓";font-size:11px;color:var(--success-text);font-weight:500}
+.task-title{flex:1;font-size:13px;color:var(--text);line-height:1.4}
+.task-title.done{text-decoration:line-through;color:var(--text3)}
+.task-del{font-size:18px;line-height:1;color:var(--text3);cursor:pointer;border:none;background:none;padding:0 2px}
+.task-del:hover{color:var(--danger-text)}
+.task-loading{font-size:12px;color:var(--text3);padding:0.5rem 0;text-align:center}
+.task-empty{font-size:12px;color:var(--text3);padding:0.5rem 0}
 .empty{text-align:center;padding:2rem;color:var(--text3);font-size:13px}
 .loading-msg{text-align:center;padding:2rem;color:var(--text2);font-size:13px}
 </style>
 </head>
 <body>
- 
+
 <div id="setup-banner">
   <h2>Connect to your Google Sheet</h2>
   <p>Paste your Apps Script Web App URL below. It should start with <code>https://script.google.com/macros/s/</code> and end with <code>/exec</code></p>
@@ -99,7 +119,7 @@ body{background:var(--bg);color:var(--text);min-height:100vh;padding:1.25rem}
     <button class="connect-btn" onclick="connectSheet()">Connect</button>
   </div>
 </div>
- 
+
 <div id="app" style="display:none">
   <div class="hdr">
     <div class="hdr-left">
@@ -119,26 +139,48 @@ body{background:var(--bg);color:var(--text);min-height:100vh;padding:1.25rem}
   </div>
   <div class="toolbar">
     <div class="filters" id="filters"></div>
-    <div style="display:flex;gap:6px;align-items:center"><button class="sort-btn" id="sort-btn" onclick="toggleSort()">Sort: default</button><button class="add-btn" onclick="openAdd()">+ Add customer</button></div>
+    <div style="display:flex;gap:6px;align-items:center">
+      <button class="sort-btn" id="sort-btn" onclick="toggleSort()">Sort: default</button>
+      <button class="add-btn" onclick="openAdd()">+ Add customer</button>
+    </div>
   </div>
   <div id="job-list"><div class="loading-msg">Loading jobs from Google Sheets...</div></div>
 </div>
- 
+
 <div class="overlay" id="overlay">
   <div class="modal">
     <h2 id="modal-title">Edit job</h2>
+
     <div class="field-lbl">Customer name</div>
     <input class="text-inp" id="name-inp" type="text" placeholder="Full name"/>
+
     <div class="field-lbl">Address</div>
     <input class="text-inp" id="address-inp" type="text" placeholder="Street address, city"/>
+
     <div class="field-lbl">Stage</div>
     <div class="stage-list" id="stage-list"></div>
+
     <div class="field-lbl">Notes</div>
     <input class="text-inp" id="notes-inp" type="text" placeholder="Add notes..."/>
+
     <div class="modal-btns" id="modal-btns"></div>
+
+    <div id="tasks-section" style="display:none">
+      <hr class="divider"/>
+      <div class="tasks-hdr">
+        <span class="tasks-hdr-lbl">Next steps</span>
+        <span id="tasks-status" style="font-size:11px;color:var(--text3)"></span>
+      </div>
+      <div class="task-add-row">
+        <input type="text" id="task-inp" placeholder="Add a next step..." onkeydown="if(event.key==='Enter')addTaskItem()"/>
+        <button class="task-add-btn" onclick="addTaskItem()">Add</button>
+      </div>
+      <div class="task-list" id="task-list"></div>
+      <div class="tasks-hint">Syncs to "Hart's Septic Operations" in your Google Tasks app</div>
+    </div>
   </div>
 </div>
- 
+
 <script>
 const STAGES=[
   {id:0,label:"Watching system",color:"#5F5E5A",bg:"#F1EFE8",group:"early"},
@@ -158,11 +200,11 @@ const STAGES=[
   {id:14,label:"90-day follow-up — complete",color:"#3C3489",bg:"#EEEDFE",group:"done"}
 ];
 const GROUP_LABELS={early:"Early stage",mid:"Quoting & permits",ready:"Deposit & scheduling",install:"Active install",done:"Complete"};
- 
+
 let SCRIPT_URL=localStorage.getItem("harts-script-url")||"";
-let sortMode="default";
-let jobs=[],nextId=14,activeFilter="all",editingId=null,isAdding=false,tempStage=0,cbCounter=0;
- 
+let jobs=[],nextId=14,activeFilter="all",editingId=null,isAdding=false,tempStage=0,cbCounter=0,sortMode="default";
+let currentTasks=[],currentJobName="",taskCounts={};
+
 function jsonp(params){
   return new Promise((resolve,reject)=>{
     const cbName="__cb"+Date.now()+"_"+(cbCounter++);
@@ -170,15 +212,15 @@ function jsonp(params){
     Object.entries(params).forEach(([k,v])=>url.searchParams.set(k,v));
     url.searchParams.set("callback",cbName);
     const script=document.createElement("script");
-    const timer=setTimeout(()=>{cleanup();reject(new Error("Request timed out"));},15000);
+    const timer=setTimeout(()=>{cleanup();reject(new Error("Timed out"));},20000);
     window[cbName]=function(data){cleanup();if(data&&data.error)reject(new Error(data.error));else resolve(data);};
     function cleanup(){clearTimeout(timer);delete window[cbName];if(script.parentNode)script.parentNode.removeChild(script);}
-    script.onerror=()=>{cleanup();reject(new Error("Script load failed"));};
+    script.onerror=()=>{cleanup();reject(new Error("Load failed"));};
     script.src=url.toString();
     document.head.appendChild(script);
   });
 }
- 
+
 window.addEventListener("DOMContentLoaded",()=>{
   if(SCRIPT_URL){
     document.getElementById("setup-banner").style.display="none";
@@ -186,25 +228,23 @@ window.addEventListener("DOMContentLoaded",()=>{
     loadJobs();
   }
 });
- 
+
 function connectSheet(){
   const url=document.getElementById("script-url-inp").value.trim();
   if(!url.startsWith("https://script.google.com/macros/s/")){
-    alert("That doesn't look right. The URL should start with:\nhttps://script.google.com/macros/s/");
-    return;
+    alert("URL should start with:\nhttps://script.google.com/macros/s/");return;
   }
-  SCRIPT_URL=url;
-  localStorage.setItem("harts-script-url",url);
+  SCRIPT_URL=url;localStorage.setItem("harts-script-url",url);
   document.getElementById("setup-banner").style.display="none";
   document.getElementById("app").style.display="block";
   loadJobs();
 }
- 
+
 function showSettings(){
   const url=prompt("Paste your Google Apps Script Web App URL:",SCRIPT_URL);
   if(url&&url.trim()){SCRIPT_URL=url.trim();localStorage.setItem("harts-script-url",SCRIPT_URL);loadJobs();}
 }
- 
+
 async function loadJobs(){
   setBadge("syncing","Loading...");
   try{
@@ -214,35 +254,34 @@ async function loadJobs(){
   }catch(e){
     setBadge("error","Could not reach sheet — tap to retry");
     document.getElementById("save-badge").onclick=loadJobs;
-    document.getElementById("job-list").innerHTML='<div class="loading-msg">Could not load. Check Settings.<br><br><small>'+esc(e.message)+'</small></div>';
+    document.getElementById("job-list").innerHTML='<div class="loading-msg">Could not load. Check Settings.<br><small>'+esc(e.message)+'</small></div>';
   }
 }
- 
+
 async function syncJob(job){
   setBadge("syncing","Saving...");
   try{await jsonp({action:"saveJob",job:JSON.stringify(job)});setBadge("synced","Saved");}
   catch(e){setBadge("error","Save failed — tap to retry");document.getElementById("save-badge").onclick=()=>syncJob(job);}
 }
- 
+
 async function syncDelete(id){
   setBadge("syncing","Deleting...");
   try{await jsonp({action:"deleteJob",id:String(id)});setBadge("synced","Saved");}
-  catch(e){setBadge("error","Delete failed — tap to retry");}
+  catch(e){setBadge("error","Delete failed");}
 }
- 
+
 let badgeTimer=null;
 function setBadge(state,msg){
   const el=document.getElementById("save-badge");
   el.className="save-badge";el.onclick=null;clearTimeout(badgeTimer);
   if(state==="syncing"){el.textContent=msg;el.classList.add("syncing");}
-  else if(state==="synced"){el.textContent=msg;el.classList.add("synced");badgeTimer=setTimeout(()=>{el.textContent="Sheets connected";},3000);}
+  else if(state==="synced"){el.textContent=msg;el.classList.add("synced");badgeTimer=setTimeout(()=>{el.textContent="Sheets connected";el.className="save-badge synced";},3000);}
   else if(state==="error"){el.textContent=msg;el.classList.add("error");}
-  else{el.textContent=msg||"";}
 }
- 
+
 function getStage(id){return STAGES.find(s=>s.id===id)||STAGES[0];}
 function esc(s){return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");}
- 
+
 function renderStats(){
   document.getElementById("s-active").textContent=jobs.filter(j=>j.stage<12).length;
   document.getElementById("s-ready").textContent=jobs.filter(j=>j.stage>=6&&j.stage<=9).length;
@@ -250,7 +289,7 @@ function renderStats(){
   document.getElementById("s-done").textContent=jobs.filter(j=>j.stage>=12).length;
   document.getElementById("sub-lbl").textContent=jobs.length+" jobs · tap a job to update";
 }
- 
+
 function renderFilters(){
   const groups=["all","early","mid","ready","install","done"];
   const labels={all:"All jobs",...GROUP_LABELS};
@@ -258,43 +297,9 @@ function renderFilters(){
     `<button class="fbtn${activeFilter===g?" active":""}" onclick="setFilter('${g}')">${labels[g]}</button>`
   ).join("");
 }
- 
+
 function setFilter(g){activeFilter=g;renderFilters();renderJobs();}
- 
-function renderJobs(){
-  const list=document.getElementById("job-list");
-  const filtered=jobs.filter(j=>activeFilter==="all"||getStage(j.stage).group===activeFilter);
-  if(sortMode==="stage-asc") filtered.sort((a,b)=>a.stage-b.stage);
-  else if(sortMode==="stage-desc") filtered.sort((a,b)=>b.stage-a.stage);
-  else if(sortMode==="name-asc") filtered.sort((a,b)=>a.name.localeCompare(b.name));
-  if(!filtered.length){list.innerHTML='<div class="empty">No jobs in this stage</div>';return;}
-  list.innerHTML=filtered.map(j=>{
-    const s=getStage(j.stage);
-    const dots=STAGES.map((_,i)=>`<div class="stage-dot${i<j.stage?" done":i===j.stage?" current":""}"></div>`).join("");
-    return `<div class="job-card" onclick="openEdit(${j.id})">
-      <div class="job-top">
-        <span class="job-name">${esc(j.name)}</span>
-        <span class="stage-badge" style="background:${s.bg};color:${s.color}">${s.label}</span>
-      </div>
-      ${j.address?`<div class="job-address">${esc(j.address)}</div>`:""}
-      ${j.notes?`<div class="job-notes">${esc(j.notes)}</div>`:""}
-      <div class="stage-bar">${dots}</div>
-    </div>`;
-  }).join("");
-}
- 
-function renderStageList(){
-  let html="";let lastGroup="";
-  STAGES.forEach(s=>{
-    if(s.group!==lastGroup){html+=`<div class="grp-lbl">${GROUP_LABELS[s.group]}</div>`;lastGroup=s.group;}
-    html+=`<div class="stage-item${tempStage===s.id?" selected":""}" onclick="selectStage(${s.id})">
-      <span class="stage-num">${s.id+1}</span><span>${s.label}</span>
-    </div>`;
-  });
-  document.getElementById("stage-list").innerHTML=html;
-}
- 
-function selectStage(id){tempStage=id;renderStageList();}
+
 function toggleSort(){
   const modes=["default","stage-asc","stage-desc","name-asc"];
   const labels={"default":"Sort: default","stage-asc":"Sort: stage (earliest first)","stage-desc":"Sort: stage (furthest first)","name-asc":"Sort: name A-Z"};
@@ -305,8 +310,139 @@ function toggleSort(){
   btn.className=sortMode!=="default"?"sort-btn active":"sort-btn";
   renderJobs();
 }
+
+function renderJobs(){
+  const list=document.getElementById("job-list");
+  const filtered=jobs.filter(j=>activeFilter==="all"||getStage(j.stage).group===activeFilter);
+  if(sortMode==="stage-asc") filtered.sort((a,b)=>a.stage-b.stage);
+  else if(sortMode==="stage-desc") filtered.sort((a,b)=>b.stage-a.stage);
+  else if(sortMode==="name-asc") filtered.sort((a,b)=>a.name.localeCompare(b.name));
+  if(!filtered.length){list.innerHTML='<div class="empty">No jobs in this stage</div>';return;}
+  list.innerHTML=filtered.map(j=>{
+    const s=getStage(j.stage);
+    const dots=STAGES.map((_,i)=>`<div class="stage-dot${i<j.stage?" done":i===j.stage?" current":""}"></div>`).join("");
+    const tc=taskCounts[j.name];
+    const taskPill=tc&&tc.open>0?`<div class="job-task-pill">${tc.open} next step${tc.open!==1?"s":""}</div>`:"";
+    return `<div class="job-card" onclick="openEdit(${j.id})">
+      <div class="job-top">
+        <span class="job-name">${esc(j.name)}</span>
+        <span class="stage-badge" style="background:${s.bg};color:${s.color}">${s.label}</span>
+      </div>
+      ${j.address?`<div class="job-address">${esc(j.address)}</div>`:""}
+      ${j.notes?`<div class="job-notes">${esc(j.notes)}</div>`:""}
+      ${taskPill}
+      <div class="stage-bar">${dots}</div>
+    </div>`;
+  }).join("");
+}
+
+function renderStageList(){
+  let html="";let lastGroup="";
+  STAGES.forEach(s=>{
+    if(s.group!==lastGroup){html+=`<div class="grp-lbl">${GROUP_LABELS[s.group]}</div>`;lastGroup=s.group;}
+    html+=`<div class="stage-item${tempStage===s.id?" selected":""}" onclick="selectStage(${s.id})">
+      <span class="stage-num">${s.id+1}</span><span>${s.label}</span>
+    </div>`;
+  });
+  document.getElementById("stage-list").innerHTML=html;
+}
+
+function selectStage(id){tempStage=id;renderStageList();}
 function renderAll(){renderStats();renderFilters();renderJobs();}
- 
+
+// ── Tasks ────────────────────────────────────────────────
+
+function renderTasks(){
+  const list=document.getElementById("task-list");
+  if(!currentTasks.length){
+    list.innerHTML='<div class="task-empty">No next steps yet — add one above</div>';
+    return;
+  }
+  const open=currentTasks.filter(t=>!t.completed);
+  const done=currentTasks.filter(t=>t.completed);
+  const all=[...open,...done];
+  list.innerHTML=all.map(t=>`
+    <div class="task-item" id="ti-${t.id}">
+      <div class="task-check${t.completed?" done":""}" onclick="toggleTask('${t.id}')"></div>
+      <span class="task-title${t.completed?" done":""}">${esc(t.title)}</span>
+      <button class="task-del" onclick="removeTask('${t.id}')" title="Delete">×</button>
+    </div>`).join("");
+}
+
+async function loadTasks(jobName){
+  currentJobName=jobName;currentTasks=[];
+  document.getElementById("task-list").innerHTML='<div class="task-loading">Loading next steps...</div>';
+  document.getElementById("tasks-status").textContent="";
+  try{
+    const data=await jsonp({action:"getTasks",jobName});
+    currentTasks=data.tasks||[];
+    const open=currentTasks.filter(t=>!t.completed).length;
+    taskCounts[jobName]={open,total:currentTasks.length};
+    document.getElementById("tasks-status").textContent=open+" open";
+    renderTasks();
+    renderJobs();
+  }catch(e){
+    document.getElementById("task-list").innerHTML='<div class="task-loading">Could not load tasks — Tasks API may need to be enabled in Apps Script</div>';
+  }
+}
+
+async function addTaskItem(){
+  const inp=document.getElementById("task-inp");
+  const title=inp.value.trim();
+  if(!title)return;
+  inp.value="";
+  const placeholder={id:"tmp-"+Date.now(),title,completed:false};
+  currentTasks.unshift(placeholder);
+  renderTasks();
+  try{
+    const data=await jsonp({action:"addTask",jobName:currentJobName,title});
+    const idx=currentTasks.findIndex(t=>t.id===placeholder.id);
+    if(idx>-1) currentTasks[idx]=data.task;
+    const open=currentTasks.filter(t=>!t.completed).length;
+    taskCounts[currentJobName]={open,total:currentTasks.length};
+    document.getElementById("tasks-status").textContent=open+" open";
+    renderTasks();renderJobs();
+  }catch(e){
+    currentTasks=currentTasks.filter(t=>t.id!==placeholder.id);
+    renderTasks();
+    alert("Could not add task: "+e.message);
+  }
+}
+
+async function toggleTask(taskId){
+  const task=currentTasks.find(t=>t.id===taskId);
+  if(!task)return;
+  task.completed=!task.completed;
+  renderTasks();
+  const open=currentTasks.filter(t=>!t.completed).length;
+  taskCounts[currentJobName]={open,total:currentTasks.length};
+  document.getElementById("tasks-status").textContent=open+" open";
+  renderJobs();
+  try{
+    await jsonp({action:"completeTask",jobName:currentJobName,taskId});
+  }catch(e){
+    task.completed=!task.completed;
+    renderTasks();
+  }
+}
+
+async function removeTask(taskId){
+  const task=currentTasks.find(t=>t.id===taskId);
+  if(!task||!confirm('Remove "'+task.title+'"?'))return;
+  currentTasks=currentTasks.filter(t=>t.id!==taskId);
+  const open=currentTasks.filter(t=>!t.completed).length;
+  taskCounts[currentJobName]={open,total:currentTasks.length};
+  document.getElementById("tasks-status").textContent=open+" open";
+  renderTasks();renderJobs();
+  try{
+    await jsonp({action:"deleteTask",jobName:currentJobName,taskId});
+  }catch(e){
+    alert("Could not delete task: "+e.message);
+  }
+}
+
+// ── Modal ────────────────────────────────────────────────
+
 function openEdit(id){
   editingId=id;isAdding=false;
   const job=jobs.find(j=>j.id===id);if(!job)return;
@@ -320,15 +456,19 @@ function openEdit(id){
     <button class="btn" onclick="closeModal()">Cancel</button>
     <button class="btn primary" onclick="saveJob()">Save</button>`;
   renderStageList();
+  document.getElementById("tasks-section").style.display="block";
+  document.getElementById("task-inp").value="";
+  loadTasks(job.name);
   document.getElementById("overlay").classList.add("open");
 }
- 
+
 function openAdd(){
   editingId=null;isAdding=true;tempStage=0;
   document.getElementById("modal-title").textContent="Add new customer";
   document.getElementById("name-inp").value="";
   document.getElementById("address-inp").value="";
   document.getElementById("notes-inp").value="";
+  document.getElementById("tasks-section").style.display="none";
   document.getElementById("modal-btns").innerHTML=`
     <button class="btn" onclick="closeModal()">Cancel</button>
     <button class="btn primary" onclick="saveJob()">Add customer</button>`;
@@ -336,12 +476,12 @@ function openAdd(){
   document.getElementById("overlay").classList.add("open");
   setTimeout(()=>document.getElementById("name-inp").focus(),80);
 }
- 
+
 function closeModal(){
   document.getElementById("overlay").classList.remove("open");
   editingId=null;isAdding=false;
 }
- 
+
 async function saveJob(){
   const name=document.getElementById("name-inp").value.trim();
   if(!name)return;
@@ -358,7 +498,7 @@ async function saveJob(){
   closeModal();renderAll();
   await syncJob(job);
 }
- 
+
 async function deleteJob(){
   if(!confirm("Remove this customer from the list?"))return;
   const id=editingId;
@@ -366,7 +506,7 @@ async function deleteJob(){
   closeModal();renderAll();
   await syncDelete(id);
 }
- 
+
 document.getElementById("overlay").addEventListener("click",function(e){if(e.target===this)closeModal();});
 </script>
 </body>
