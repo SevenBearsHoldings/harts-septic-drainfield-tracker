@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Hart's Septic — Drainfield Pipeline</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg: #ffffff;
+    --bg2: #f5f5f3;
+    --bg3: #efefeb;
+    --text: #1a1a18;
+    --text2: #6b6b68;
+    --text3: #a0a09c;
+    --border: rgba(0,0,0,0.12);
+    --border2: rgba(0,0,0,0.22);
+    --info-bg: #E6F1FB;
+    --info-text: #0C447C;
+    --success-bg: #E1F5EE;
+    --success-text: #085041;
+    --warn-bg: #FAEEDA;
+    --warn-text: #633806;
+    --danger-bg: #FCEBEB;
+    --danger-text: #791F1F;
+    --radius-md: 8px;
+    --radius-lg: 12px;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #1e1e1c;
+      --bg2: #2a2a28;
+      --bg3: #323230;
+      --text: #f0f0ec;
+      --text2: #a0a09c;
+      --text3: #6b6b68;
+      --border: rgba(255,255,255,0.1);
+      --border2: rgba(255,255,255,0.2);
+      --info-bg: #0c2a44;
+      --info-text: #85B7EB;
+      --success-bg: #04342C;
+      --success-text: #5DCAA5;
+      --warn-bg: #2a1e08;
+      --warn-text: #FAC775;
+      --danger-bg: #2a0c0c;
+      --danger-text: #F09595;
+    }
+  }
+  body { background: var(--bg); color: var(--text); min-height: 100vh; padding: 1.25rem; }
+  .hdr { padding-bottom: 0.75rem; border-bottom: 0.5px solid var(--border); margin-bottom: 1rem; display: flex; align-items: center; justify-content: space-between; gap: 8px; flex-wrap: wrap; }
+  .hdr-left h1 { font-size: 18px; font-weight: 500; }
+  .hdr-left p { font-size: 13px; color: var(--text2); margin-top: 2px; }
+  .save-badge { font-size: 11px; padding: 3px 10px; border-radius: 20px; background: var(--bg2); color: var(--text2); white-space: nowrap; }
+  .save-badge.saving { color: var(--warn-text); background: var(--warn-bg); }
+  .save-badge.saved { color: var(--success-text); background: var(--success-bg); }
+  .save-badge.error { color: var(--danger-text); background: var(--danger-bg); cursor: pointer; }
+  .stats { display: grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap: 8px; margin-bottom: 1rem; }
+  .stat { background: var(--bg2); border-radius: var(--radius-md); padding: 0.75rem; text-align: center; }
+  .stat-num { font-size: 22px; font-weight: 500; }
+  .stat-lbl { font-size: 11px; color: var(--text2); margin-top: 2px; }
+  .toolbar { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 0.75rem; flex-wrap: wrap; }
+  .filters { display: flex; gap: 6px; flex-wrap: wrap; }
+  .fbtn { font-size: 12px; padding: 4px 10px; border-radius: 20px; border: 0.5px solid var(--border2); background: transparent; color: var(--text2); cursor: pointer; }
+  .fbtn.active { background: var(--info-bg); color: var(--info-text); border-color: transparent; }
+  .add-btn { font-size: 13px; padding: 6px 14px; border-radius: 20px; border: 0.5px solid var(--border2); background: transparent; color: var(--text); cursor: pointer; white-space: nowrap; }
+  .add-btn:hover { background: var(--bg2); }
+  .job-card { background: var(--bg); border: 0.5px solid var(--border); border-radius: var(--radius-lg); padding: 0.85rem 1rem; margin-bottom: 8px; cursor: pointer; }
+  .job-card:hover { border-color: var(--border2); }
+  .job-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px; gap: 8px; }
+  .job-name { font-size: 14px; font-weight: 500; }
+  .stage-badge { font-size: 11px; padding: 3px 8px; border-radius: 20px; font-weight: 500; white-space: nowrap; }
+  .job-meta { font-size: 12px; color: var(--text2); margin-top: 2px; }
+  .stage-bar { display: flex; gap: 2px; margin-top: 8px; }
+  .stage-dot { height: 4px; flex: 1; border-radius: 2px; background: var(--border); }
+  .stage-dot.done { background: #1D9E75; }
+  .stage-dot.current { background: #378ADD; }
+  .overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.45); z-index: 100; align-items: center; justify-content: center; padding: 1rem; }
+  .overlay.open { display: flex; }
+  .modal { background: var(--bg); border-radius: var(--radius-lg); border: 0.5px solid var(--border2); padding: 1.25rem; width: 100%; max-width: 460px; max-height: 88vh; overflow-y: auto; }
+  .modal h2 { font-size: 16px; font-weight: 500; margin-bottom: 1rem; }
+  .field-lbl { font-size: 11px; color: var(--text2); text-transform: uppercase; letter-spacing: 0.05em; margin: 10px 0 5px; }
+  .text-inp { width: 100%; padding: 8px 10px; font-size: 13px; border: 0.5px solid var(--border2); border-radius: var(--radius-md); background: transparent; color: var(--text); font-family: inherit; }
+  .text-inp:focus { outline: none; border-color: #378ADD; }
+  .stage-list { display: flex; flex-direction: column; gap: 4px; }
+  .stage-item { display: flex; align-items: center; gap: 10px; padding: 8px 10px; border-radius: var(--radius-md); border: 0.5px solid var(--border); cursor: pointer; font-size: 13px; color: var(--text); }
+  .stage-item:hover { background: var(--bg2); }
+  .stage-item.selected { background: var(--info-bg); border-color: transparent; color: var(--info-text); font-weight: 500; }
+  .stage-num { font-size: 11px; color: var(--text3); min-width: 18px; }
+  .grp-lbl { font-size: 11px; color: var(--text2); text-transform: uppercase; letter-spacing: 0.05em; margin: 10px 0 4px; }
+  .modal-btns { display: flex; gap: 8px; margin-top: 1rem; }
+  .btn { flex: 1; padding: 8px; border-radius: var(--radius-md); border: 0.5px solid var(--border2); background: transparent; color: var(--text); cursor: pointer; font-size: 13px; font-family: inherit; }
+  .btn:hover { background: var(--bg2); }
+  .btn.primary { background: var(--info-bg); color: var(--info-text); border-color: transparent; font-weight: 500; }
+  .btn.danger { color: var(--danger-text); border-color: #F09595; }
+  .btn.danger:hover { background: var(--danger-bg); }
+  .empty { text-align: center; padding: 2rem; color: var(--text3); font-size: 13px; }
+</style>
+</head>
+<body>
+
+<div class="hdr">
+  <div class="hdr-left">
+    <h1>Hart's Septic — drainfield pipeline</h1>
+    <p id="sub-lbl">Loading...</p>
+  </div>
+  <span class="save-badge" id="save-badge">Loading...</span>
+</div>
+
+<div class="stats">
+  <div class="stat"><div class="stat-num" id="s-active">—</div><div class="stat-lbl">Active jobs</div></div>
+  <div class="stat"><div class="stat-num" id="s-ready">—</div><div class="stat-lbl">Ready to schedule</div></div>
+  <div class="stat"><div class="stat-num" id="s-need">—</div><div class="stat-lbl">Need action</div></div>
+  <div class="stat"><div class="stat-num" id="s-done">—</div><div class="stat-lbl">Complete</div></div>
+</div>
+
+<div class="toolbar">
+  <div class="filters" id="filters"></div>
+  <button class="add-btn" onclick="openAdd()">+ Add customer</button>
+</div>
+
+<div id="job-list"></div>
+
+<div class="overlay" id="overlay">
+  <div class="modal">
+    <h2 id="modal-title">Edit job</h2>
+    <div class="field-lbl">Customer name</div>
+    <input class="text-inp" id="name-inp" type="text" placeholder="Full name or description" />
+    <div class="field-lbl">Stage</div>
+    <div class="stage-list" id="stage-list"></div>
+    <div class="field-lbl">Notes</div>
+    <input class="text-inp" id="notes-inp" type="text" placeholder="Add notes..." />
+    <div class="modal-btns" id="modal-btns"></div>
+  </div>
+</div>
+
+<script>
+const STAGES=[
+  {id:0,label:"Watching system",color:"#5F5E5A",bg:"#F1EFE8",group:"early"},
+  {id:1,label:"Replace confirmed",color:"#185FA5",bg:"#E6F1FB",group:"early"},
+  {id:2,label:"Initial quote sent",color:"#185FA5",bg:"#E6F1FB",group:"early"},
+  {id:3,label:"Soil report ordered",color:"#BA7517",bg:"#FAEEDA",group:"mid"},
+  {id:4,label:"County permit",color:"#BA7517",bg:"#FAEEDA",group:"mid"},
+  {id:5,label:"Final quote sent",color:"#BA7517",bg:"#FAEEDA",group:"mid"},
+  {id:6,label:"Quote accepted / deposit",color:"#0F6E56",bg:"#E1F5EE",group:"ready"},
+  {id:7,label:"On schedule",color:"#0F6E56",bg:"#E1F5EE",group:"ready"},
+  {id:8,label:"Supplies ordered",color:"#0F6E56",bg:"#E1F5EE",group:"ready"},
+  {id:9,label:"Equipment rented",color:"#0F6E56",bg:"#E1F5EE",group:"ready"},
+  {id:10,label:"Date confirmed",color:"#0F6E56",bg:"#E1F5EE",group:"install"},
+  {id:11,label:"County inspection scheduled",color:"#533AB7",bg:"#EEEDFE",group:"install"},
+  {id:12,label:"Final payment received",color:"#533AB7",bg:"#EEEDFE",group:"done"},
+  {id:13,label:"30-day follow-up",color:"#533AB7",bg:"#EEEDFE",group:"done"},
+  {id:14,label:"90-day follow-up — complete",color:"#3C3489",bg:"#EEEDFE",group:"done"}
+];
+const GROUP_LABELS={early:"Early stage",mid:"Quoting & permits",ready:"Deposit & scheduling",install:"Active install",done:"Complete"};
+const DEFAULT_JOBS=[
+  {id:1,name:"Colin Gaines",stage:0,notes:""},
+  {id:2,name:"Chris",stage:0,notes:""},
+  {id:3,name:"Lady in Edgewood",stage:0,notes:""},
+  {id:4,name:"Michael Lowe",stage:0,notes:""},
+  {id:5,name:"Pawel Stec",stage:0,notes:""},
+  {id:6,name:"Michelle Parisi",stage:0,notes:""},
+  {id:7,name:"Noonan — by the lake",stage:0,notes:""},
+  {id:8,name:"Handley Rd.",stage:0,notes:""},
+  {id:9,name:"Martin Jimenez",stage:0,notes:""},
+  {id:10,name:"Josh Jennings",stage:0,notes:""},
+  {id:11,name:"Emily Powell",stage:0,notes:""},
+  {id:12,name:"Mr. Fritz (call)",stage:0,notes:"Call to follow up"},
+  {id:13,name:"Guy out on lake — long driveway",stage:0,notes:""}
+];
+
+const STORAGE_KEY="harts-septic-jobs-v2";
+let jobs=[];
+let nextId=14;
+let activeFilter="all";
+let editingId=null;
+let isAdding=false;
+let tempStage=0;
+let saveTimer=null;
+
+function setSaveBadge(state,msg){
+  const el=document.getElementById("save-badge");
+  el.className="save-badge";
+  el.onclick=null;
+  if(state==="saving"){el.textContent="Saving...";el.classList.add("saving");}
+  else if(state==="saved"){el.textContent="Saved";el.classList.add("saved");}
+  else if(state==="error"){el.textContent=msg||"Save failed — tap to retry";el.classList.add("error");el.onclick=()=>persistJobs();}
+  else{el.textContent=msg||"";}
+}
+
+function loadJobs(){
+  setSaveBadge("","Loading...");
+  try{
+    const raw=localStorage.getItem(STORAGE_KEY);
+    const rawId=localStorage.getItem(STORAGE_KEY+"-nextid");
+    if(raw){
+      jobs=JSON.parse(raw);
+      nextId=rawId?parseInt(rawId,10):jobs.reduce((m,j)=>Math.max(m,j.id),0)+1;
+      setSaveBadge("saved");
+    } else {
+      jobs=DEFAULT_JOBS.map(j=>({...j}));
+      nextId=14;
+      persistJobs();
+    }
+  } catch(e){
+    jobs=DEFAULT_JOBS.map(j=>({...j}));
+    nextId=14;
+    setSaveBadge("error","Could not load saved data");
+  }
+  renderAll();
+}
+
+function persistJobs(){
+  setSaveBadge("saving");
+  try{
+    localStorage.setItem(STORAGE_KEY,JSON.stringify(jobs));
+    localStorage.setItem(STORAGE_KEY+"-nextid",String(nextId));
+    setSaveBadge("saved");
+  } catch(e){
+    setSaveBadge("error","Save failed — tap to retry");
+  }
+}
+
+function scheduleSave(){clearTimeout(saveTimer);saveTimer=setTimeout(persistJobs,500);}
+
+function getStage(id){return STAGES.find(s=>s.id===id)||STAGES[0];}
+
+function renderStats(){
+  document.getElementById("s-active").textContent=jobs.filter(j=>j.stage<12).length;
+  document.getElementById("s-ready").textContent=jobs.filter(j=>j.stage>=6&&j.stage<=9).length;
+  document.getElementById("s-need").textContent=jobs.filter(j=>j.stage<=2).length;
+  document.getElementById("s-done").textContent=jobs.filter(j=>j.stage>=12).length;
+  document.getElementById("sub-lbl").textContent=jobs.length+" jobs · tap a job to update";
+}
+
+function renderFilters(){
+  const groups=["all","early","mid","ready","install","done"];
+  const labels={all:"All jobs",...GROUP_LABELS};
+  document.getElementById("filters").innerHTML=groups.map(g=>
+    `<button class="fbtn${activeFilter===g?" active":""}" onclick="setFilter('${g}')">${labels[g]}</button>`
+  ).join("");
+}
+
+function setFilter(g){activeFilter=g;renderFilters();renderJobs();}
+
+function renderJobs(){
+  const list=document.getElementById("job-list");
+  const filtered=jobs.filter(j=>activeFilter==="all"||getStage(j.stage).group===activeFilter);
+  if(!filtered.length){list.innerHTML='<div class="empty">No jobs in this stage</div>';return;}
+  list.innerHTML=filtered.map(j=>{
+    const s=getStage(j.stage);
+    const dots=STAGES.map((_,i)=>`<div class="stage-dot${i<j.stage?" done":i===j.stage?" current":""}"></div>`).join("");
+    return `<div class="job-card" onclick="openEdit(${j.id})">
+      <div class="job-top">
+        <span class="job-name">${esc(j.name)}</span>
+        <span class="stage-badge" style="background:${s.bg};color:${s.color}">${s.label}</span>
+      </div>
+      ${j.notes?`<div class="job-meta">${esc(j.notes)}</div>`:""}
+      <div class="stage-bar">${dots}</div>
+    </div>`;
+  }).join("");
+}
+
+function esc(s){return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");}
+
+function renderStageList(){
+  let html="";let lastGroup="";
+  STAGES.forEach(s=>{
+    if(s.group!==lastGroup){html+=`<div class="grp-lbl">${GROUP_LABELS[s.group]}</div>`;lastGroup=s.group;}
+    html+=`<div class="stage-item${tempStage===s.id?" selected":""}" onclick="selectStage(${s.id})">
+      <span class="stage-num">${s.id+1}</span><span>${s.label}</span>
+    </div>`;
+  });
+  document.getElementById("stage-list").innerHTML=html;
+}
+
+function selectStage(id){tempStage=id;renderStageList();}
+
+function openEdit(id){
+  editingId=id;isAdding=false;
+  const job=jobs.find(j=>j.id===id);
+  if(!job)return;
+  tempStage=job.stage;
+  document.getElementById("modal-title").textContent="Edit job";
+  document.getElementById("name-inp").value=job.name;
+  document.getElementById("notes-inp").value=job.notes;
+  document.getElementById("modal-btns").innerHTML=`
+    <button class="btn danger" onclick="deleteJob()">Delete</button>
+    <button class="btn" onclick="closeModal()">Cancel</button>
+    <button class="btn primary" onclick="saveJob()">Save</button>`;
+  renderStageList();
+  document.getElementById("overlay").classList.add("open");
+}
+
+function openAdd(){
+  editingId=null;isAdding=true;tempStage=0;
+  document.getElementById("modal-title").textContent="Add new customer";
+  document.getElementById("name-inp").value="";
+  document.getElementById("notes-inp").value="";
+  document.getElementById("modal-btns").innerHTML=`
+    <button class="btn" onclick="closeModal()">Cancel</button>
+    <button class="btn primary" onclick="saveJob()">Add customer</button>`;
+  renderStageList();
+  document.getElementById("overlay").classList.add("open");
+  setTimeout(()=>document.getElementById("name-inp").focus(),80);
+}
+
+function closeModal(){
+  document.getElementById("overlay").classList.remove("open");
+  editingId=null;isAdding=false;
+}
+
+function saveJob(){
+  const name=document.getElementById("name-inp").value.trim();
+  if(!name)return;
+  const notes=document.getElementById("notes-inp").value.trim();
+  if(isAdding){
+    jobs.push({id:nextId++,name,stage:tempStage,notes});
+  } else {
+    const job=jobs.find(j=>j.id===editingId);
+    if(job){job.name=name;job.stage=tempStage;job.notes=notes;}
+  }
+  closeModal();renderAll();scheduleSave();
+}
+
+function deleteJob(){
+  if(!confirm("Remove this customer from the list?"))return;
+  jobs=jobs.filter(j=>j.id!==editingId);
+  closeModal();renderAll();scheduleSave();
+}
+
+function renderAll(){renderStats();renderFilters();renderJobs();}
+
+document.getElementById("overlay").addEventListener("click",function(e){if(e.target===this)closeModal();});
+
+loadJobs();
+</script>
+</body>
+</html>
