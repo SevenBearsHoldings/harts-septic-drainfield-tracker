@@ -27,20 +27,14 @@
   --danger-bg:#2a0c0c;--danger-text:#F09595;
 }}
 body{background:var(--bg);color:var(--text);min-height:100vh;padding:1.25rem}
-
-/* ── Setup banner ── */
 #setup-banner{background:var(--warn-bg);border:0.5px solid var(--warn-text);border-radius:var(--radius-lg);padding:1.25rem;margin-bottom:1.25rem}
 #setup-banner h2{font-size:15px;font-weight:500;color:var(--warn-text);margin-bottom:0.5rem}
 #setup-banner p{font-size:13px;color:var(--warn-text);line-height:1.6;margin-bottom:0.75rem}
-#setup-banner ol{font-size:13px;color:var(--warn-text);line-height:1.9;padding-left:1.25rem;margin-bottom:0.75rem}
 #setup-banner code{font-family:monospace;background:rgba(0,0,0,0.08);padding:1px 5px;border-radius:4px;font-size:12px}
 .url-row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
-#script-url-inp{flex:1;min-width:200px;padding:8px 10px;font-size:13px;border:0.5px solid var(--border2);border-radius:var(--radius-md);background:var(--bg);color:var(--text);font-family:inherit}
-#script-url-inp:focus{outline:none;border-color:#378ADD}
+.text-inp{width:100%;padding:8px 10px;font-size:13px;border:0.5px solid var(--border2);border-radius:var(--radius-md);background:var(--bg);color:var(--text);font-family:inherit}
+.text-inp:focus{outline:none;border-color:#378ADD}
 .connect-btn{padding:8px 16px;border-radius:var(--radius-md);border:none;background:var(--info-bg);color:var(--info-text);font-size:13px;font-weight:500;cursor:pointer;white-space:nowrap}
-.connect-btn:hover{opacity:0.85}
-
-/* ── Header ── */
 .hdr{padding-bottom:0.75rem;border-bottom:0.5px solid var(--border);margin-bottom:1rem;display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap}
 .hdr-left h1{font-size:18px;font-weight:500}
 .hdr-left p{font-size:13px;color:var(--text2);margin-top:2px}
@@ -51,41 +45,34 @@ body{background:var(--bg);color:var(--text);min-height:100vh;padding:1.25rem}
 .save-badge.error{color:var(--danger-text);background:var(--danger-bg);cursor:pointer}
 .settings-btn{font-size:12px;padding:3px 10px;border-radius:20px;border:0.5px solid var(--border2);background:transparent;color:var(--text2);cursor:pointer}
 .settings-btn:hover{background:var(--bg2)}
-
-/* ── Stats ── */
 .stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin-bottom:1rem}
 .stat{background:var(--bg2);border-radius:var(--radius-md);padding:0.75rem;text-align:center}
 .stat-num{font-size:22px;font-weight:500}
 .stat-lbl{font-size:11px;color:var(--text2);margin-top:2px}
-
-/* ── Toolbar ── */
 .toolbar{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:0.75rem;flex-wrap:wrap}
 .filters{display:flex;gap:6px;flex-wrap:wrap}
 .fbtn{font-size:12px;padding:4px 10px;border-radius:20px;border:0.5px solid var(--border2);background:transparent;color:var(--text2);cursor:pointer}
 .fbtn.active{background:var(--info-bg);color:var(--info-text);border-color:transparent}
 .add-btn{font-size:13px;padding:6px 14px;border-radius:20px;border:0.5px solid var(--border2);background:transparent;color:var(--text);cursor:pointer;white-space:nowrap}
 .add-btn:hover{background:var(--bg2)}
-
-/* ── Job cards ── */
+.sort-btn{font-size:12px;padding:4px 10px;border-radius:20px;border:0.5px solid var(--border2);background:transparent;color:var(--text2);cursor:pointer;white-space:nowrap}
+.sort-btn.active{background:var(--info-bg);color:var(--info-text);border-color:transparent}
 .job-card{background:var(--bg);border:0.5px solid var(--border);border-radius:var(--radius-lg);padding:0.85rem 1rem;margin-bottom:8px;cursor:pointer}
 .job-card:hover{border-color:var(--border2)}
-.job-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;gap:8px}
+.job-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;gap:8px}
 .job-name{font-size:14px;font-weight:500}
 .stage-badge{font-size:11px;padding:3px 8px;border-radius:20px;font-weight:500;white-space:nowrap}
-.job-meta{font-size:12px;color:var(--text2);margin-top:2px}
+.job-address{font-size:12px;color:var(--text3);margin-top:2px}
+.job-notes{font-size:12px;color:var(--text2);margin-top:2px}
 .stage-bar{display:flex;gap:2px;margin-top:8px}
 .stage-dot{height:4px;flex:1;border-radius:2px;background:var(--border)}
 .stage-dot.done{background:#1D9E75}
 .stage-dot.current{background:#378ADD}
-
-/* ── Modal overlay ── */
 .overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:100;align-items:center;justify-content:center;padding:1rem}
 .overlay.open{display:flex}
 .modal{background:var(--bg);border-radius:var(--radius-lg);border:0.5px solid var(--border2);padding:1.25rem;width:100%;max-width:460px;max-height:88vh;overflow-y:auto}
 .modal h2{font-size:16px;font-weight:500;margin-bottom:1rem}
 .field-lbl{font-size:11px;color:var(--text2);text-transform:uppercase;letter-spacing:0.05em;margin:10px 0 5px}
-.text-inp{width:100%;padding:8px 10px;font-size:13px;border:0.5px solid var(--border2);border-radius:var(--radius-md);background:transparent;color:var(--text);font-family:inherit}
-.text-inp:focus{outline:none;border-color:#378ADD}
 .stage-list{display:flex;flex-direction:column;gap:4px}
 .stage-item{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:var(--radius-md);border:0.5px solid var(--border);cursor:pointer;font-size:13px;color:var(--text)}
 .stage-item:hover{background:var(--bg2)}
@@ -98,31 +85,21 @@ body{background:var(--bg);color:var(--text);min-height:100vh;padding:1.25rem}
 .btn.primary{background:var(--info-bg);color:var(--info-text);border-color:transparent;font-weight:500}
 .btn.danger{color:var(--danger-text);border-color:#F09595}
 .btn.danger:hover{background:var(--danger-bg)}
-
 .empty{text-align:center;padding:2rem;color:var(--text3);font-size:13px}
 .loading-msg{text-align:center;padding:2rem;color:var(--text2);font-size:13px}
 </style>
 </head>
 <body>
-
-<!-- ══ SETUP BANNER (hidden once URL is saved) ══ -->
+ 
 <div id="setup-banner">
-  <h2>One-time setup required</h2>
-  <p>This app saves to your own Google Sheet. Complete these steps once, then paste your script URL below.</p>
-  <ol>
-    <li>Go to <strong>script.google.com</strong> → click <strong>New project</strong></li>
-    <li>Delete the default code, paste in the contents of <code>harts_septic_apps_script.gs</code></li>
-    <li>Click <strong>Save</strong> (disk icon), then <strong>Deploy → New deployment</strong></li>
-    <li>Type: <strong>Web app</strong> · Execute as: <strong>Me</strong> · Access: <strong>Anyone</strong></li>
-    <li>Click <strong>Deploy</strong>, authorize when prompted, then copy the Web app URL</li>
-  </ol>
+  <h2>Connect to your Google Sheet</h2>
+  <p>Paste your Apps Script Web App URL below. It should start with <code>https://script.google.com/macros/s/</code> and end with <code>/exec</code></p>
   <div class="url-row">
-    <input class="text-inp" id="script-url-inp" type="url" placeholder="Paste your Web App URL here — starts with https://script.google.com/macros/s/..."/>
+    <input class="text-inp" id="script-url-inp" type="url" placeholder="https://script.google.com/macros/s/.../exec" style="flex:1;min-width:200px"/>
     <button class="connect-btn" onclick="connectSheet()">Connect</button>
   </div>
 </div>
-
-<!-- ══ MAIN APP ══ -->
+ 
 <div id="app" style="display:none">
   <div class="hdr">
     <div class="hdr-left">
@@ -134,28 +111,26 @@ body{background:var(--bg);color:var(--text);min-height:100vh;padding:1.25rem}
       <button class="settings-btn" onclick="showSettings()">Settings</button>
     </div>
   </div>
-
   <div class="stats">
     <div class="stat"><div class="stat-num" id="s-active">—</div><div class="stat-lbl">Active jobs</div></div>
     <div class="stat"><div class="stat-num" id="s-ready">—</div><div class="stat-lbl">Ready to schedule</div></div>
     <div class="stat"><div class="stat-num" id="s-need">—</div><div class="stat-lbl">Need action</div></div>
     <div class="stat"><div class="stat-num" id="s-done">—</div><div class="stat-lbl">Complete</div></div>
   </div>
-
   <div class="toolbar">
     <div class="filters" id="filters"></div>
-    <button class="add-btn" onclick="openAdd()">+ Add customer</button>
+    <div style="display:flex;gap:6px;align-items:center"><button class="sort-btn" id="sort-btn" onclick="toggleSort()">Sort: default</button><button class="add-btn" onclick="openAdd()">+ Add customer</button></div>
   </div>
-
   <div id="job-list"><div class="loading-msg">Loading jobs from Google Sheets...</div></div>
 </div>
-
-<!-- ══ EDIT / ADD MODAL ══ -->
+ 
 <div class="overlay" id="overlay">
   <div class="modal">
     <h2 id="modal-title">Edit job</h2>
     <div class="field-lbl">Customer name</div>
-    <input class="text-inp" id="name-inp" type="text" placeholder="Full name or description"/>
+    <input class="text-inp" id="name-inp" type="text" placeholder="Full name"/>
+    <div class="field-lbl">Address</div>
+    <input class="text-inp" id="address-inp" type="text" placeholder="Street address, city"/>
     <div class="field-lbl">Stage</div>
     <div class="stage-list" id="stage-list"></div>
     <div class="field-lbl">Notes</div>
@@ -163,252 +138,236 @@ body{background:var(--bg);color:var(--text);min-height:100vh;padding:1.25rem}
     <div class="modal-btns" id="modal-btns"></div>
   </div>
 </div>
-
+ 
 <script>
-// ── Stage definitions ──────────────────────────────────────
 const STAGES=[
-  {id:0,label:"Watching system",      color:"#5F5E5A",bg:"#F1EFE8",group:"early"},
-  {id:1,label:"Replace confirmed",    color:"#185FA5",bg:"#E6F1FB",group:"early"},
-  {id:2,label:"Initial quote sent",   color:"#185FA5",bg:"#E6F1FB",group:"early"},
-  {id:3,label:"Soil report ordered",  color:"#BA7517",bg:"#FAEEDA",group:"mid"},
-  {id:4,label:"County permit",        color:"#BA7517",bg:"#FAEEDA",group:"mid"},
-  {id:5,label:"Final quote sent",     color:"#BA7517",bg:"#FAEEDA",group:"mid"},
+  {id:0,label:"Watching system",color:"#5F5E5A",bg:"#F1EFE8",group:"early"},
+  {id:1,label:"Replace confirmed",color:"#185FA5",bg:"#E6F1FB",group:"early"},
+  {id:2,label:"Initial quote sent",color:"#185FA5",bg:"#E6F1FB",group:"early"},
+  {id:3,label:"Soil report ordered",color:"#BA7517",bg:"#FAEEDA",group:"mid"},
+  {id:4,label:"County permit",color:"#BA7517",bg:"#FAEEDA",group:"mid"},
+  {id:5,label:"Final quote sent",color:"#BA7517",bg:"#FAEEDA",group:"mid"},
   {id:6,label:"Quote accepted / deposit",color:"#0F6E56",bg:"#E1F5EE",group:"ready"},
-  {id:7,label:"On schedule",          color:"#0F6E56",bg:"#E1F5EE",group:"ready"},
-  {id:8,label:"Supplies ordered",     color:"#0F6E56",bg:"#E1F5EE",group:"ready"},
-  {id:9,label:"Equipment rented",     color:"#0F6E56",bg:"#E1F5EE",group:"ready"},
-  {id:10,label:"Date confirmed",      color:"#0F6E56",bg:"#E1F5EE",group:"install"},
+  {id:7,label:"On schedule",color:"#0F6E56",bg:"#E1F5EE",group:"ready"},
+  {id:8,label:"Supplies ordered",color:"#0F6E56",bg:"#E1F5EE",group:"ready"},
+  {id:9,label:"Equipment rented",color:"#0F6E56",bg:"#E1F5EE",group:"ready"},
+  {id:10,label:"Date confirmed",color:"#0F6E56",bg:"#E1F5EE",group:"install"},
   {id:11,label:"County inspection scheduled",color:"#533AB7",bg:"#EEEDFE",group:"install"},
   {id:12,label:"Final payment received",color:"#533AB7",bg:"#EEEDFE",group:"done"},
-  {id:13,label:"30-day follow-up",    color:"#533AB7",bg:"#EEEDFE",group:"done"},
+  {id:13,label:"30-day follow-up",color:"#533AB7",bg:"#EEEDFE",group:"done"},
   {id:14,label:"90-day follow-up — complete",color:"#3C3489",bg:"#EEEDFE",group:"done"}
 ];
 const GROUP_LABELS={early:"Early stage",mid:"Quoting & permits",ready:"Deposit & scheduling",install:"Active install",done:"Complete"};
-
-// ── State ──────────────────────────────────────────────────
-let SCRIPT_URL = localStorage.getItem("harts-script-url") || "";
-let jobs = [];
-let nextId = 14;
-let activeFilter = "all";
-let editingId = null;
-let isAdding = false;
-let tempStage = 0;
-let saveTimer = null;
-
-// ── Init ───────────────────────────────────────────────────
-window.addEventListener("DOMContentLoaded", () => {
-  if (SCRIPT_URL) {
-    document.getElementById("setup-banner").style.display = "none";
-    document.getElementById("app").style.display = "block";
-    document.getElementById("script-url-inp").value = SCRIPT_URL;
+ 
+let SCRIPT_URL=localStorage.getItem("harts-script-url")||"";
+let sortMode="default";
+let jobs=[],nextId=14,activeFilter="all",editingId=null,isAdding=false,tempStage=0,cbCounter=0;
+ 
+function jsonp(params){
+  return new Promise((resolve,reject)=>{
+    const cbName="__cb"+Date.now()+"_"+(cbCounter++);
+    const url=new URL(SCRIPT_URL);
+    Object.entries(params).forEach(([k,v])=>url.searchParams.set(k,v));
+    url.searchParams.set("callback",cbName);
+    const script=document.createElement("script");
+    const timer=setTimeout(()=>{cleanup();reject(new Error("Request timed out"));},15000);
+    window[cbName]=function(data){cleanup();if(data&&data.error)reject(new Error(data.error));else resolve(data);};
+    function cleanup(){clearTimeout(timer);delete window[cbName];if(script.parentNode)script.parentNode.removeChild(script);}
+    script.onerror=()=>{cleanup();reject(new Error("Script load failed"));};
+    script.src=url.toString();
+    document.head.appendChild(script);
+  });
+}
+ 
+window.addEventListener("DOMContentLoaded",()=>{
+  if(SCRIPT_URL){
+    document.getElementById("setup-banner").style.display="none";
+    document.getElementById("app").style.display="block";
     loadJobs();
-  } else {
-    document.getElementById("app").style.display = "none";
   }
 });
-
-// ── Connection ────────────────────────────────────────────
-function connectSheet() {
-  const url = document.getElementById("script-url-inp").value.trim();
-  if (!url.startsWith("https://script.google.com")) {
-    alert("That doesn't look like a valid Apps Script URL. Make sure you copied the Web App deployment URL.");
+ 
+function connectSheet(){
+  const url=document.getElementById("script-url-inp").value.trim();
+  if(!url.startsWith("https://script.google.com/macros/s/")){
+    alert("That doesn't look right. The URL should start with:\nhttps://script.google.com/macros/s/");
     return;
   }
-  SCRIPT_URL = url;
-  localStorage.setItem("harts-script-url", url);
-  document.getElementById("setup-banner").style.display = "none";
-  document.getElementById("app").style.display = "block";
+  SCRIPT_URL=url;
+  localStorage.setItem("harts-script-url",url);
+  document.getElementById("setup-banner").style.display="none";
+  document.getElementById("app").style.display="block";
   loadJobs();
 }
-
-function showSettings() {
-  const url = prompt("Paste your Google Apps Script Web App URL:", SCRIPT_URL);
-  if (url && url.trim()) {
-    SCRIPT_URL = url.trim();
-    localStorage.setItem("harts-script-url", SCRIPT_URL);
-    loadJobs();
+ 
+function showSettings(){
+  const url=prompt("Paste your Google Apps Script Web App URL:",SCRIPT_URL);
+  if(url&&url.trim()){SCRIPT_URL=url.trim();localStorage.setItem("harts-script-url",SCRIPT_URL);loadJobs();}
+}
+ 
+async function loadJobs(){
+  setBadge("syncing","Loading...");
+  try{
+    const data=await jsonp({action:"getJobs"});
+    jobs=data.jobs||[];nextId=data.nextId||14;
+    setBadge("synced","Synced");renderAll();
+  }catch(e){
+    setBadge("error","Could not reach sheet — tap to retry");
+    document.getElementById("save-badge").onclick=loadJobs;
+    document.getElementById("job-list").innerHTML='<div class="loading-msg">Could not load. Check Settings.<br><br><small>'+esc(e.message)+'</small></div>';
   }
 }
-
-// ── API calls ─────────────────────────────────────────────
-async function api(params) {
-  const url = new URL(SCRIPT_URL);
-  Object.entries(params).forEach(([k,v]) => url.searchParams.set(k, v));
-  const resp = await fetch(url.toString(), { redirect: "follow" });
-  const data = await resp.json();
-  if (data.error) throw new Error(data.error);
-  return data;
+ 
+async function syncJob(job){
+  setBadge("syncing","Saving...");
+  try{await jsonp({action:"saveJob",job:JSON.stringify(job)});setBadge("synced","Saved");}
+  catch(e){setBadge("error","Save failed — tap to retry");document.getElementById("save-badge").onclick=()=>syncJob(job);}
 }
-
-// ── Load ──────────────────────────────────────────────────
-async function loadJobs() {
-  setBadge("syncing", "Loading...");
-  try {
-    const data = await api({ action: "getJobs" });
-    jobs = data.jobs;
-    nextId = data.nextId;
-    setBadge("synced", "Synced with Google Sheets");
-    renderAll();
-  } catch(e) {
-    setBadge("error", "Could not reach sheet — tap to retry");
-    document.getElementById("save-badge").onclick = loadJobs;
-    document.getElementById("job-list").innerHTML =
-      '<div class="loading-msg">Could not load data. Check your script URL in Settings.</div>';
-  }
+ 
+async function syncDelete(id){
+  setBadge("syncing","Deleting...");
+  try{await jsonp({action:"deleteJob",id:String(id)});setBadge("synced","Saved");}
+  catch(e){setBadge("error","Delete failed — tap to retry");}
 }
-
-// ── Save single job ───────────────────────────────────────
-async function syncJob(job) {
-  setBadge("syncing", "Saving...");
-  try {
-    await api({ action: "saveJob", job: JSON.stringify(job) });
-    setBadge("synced", "Saved to Google Sheets");
-  } catch(e) {
-    setBadge("error", "Save failed — tap to retry");
-    document.getElementById("save-badge").onclick = () => syncJob(job);
-  }
+ 
+let badgeTimer=null;
+function setBadge(state,msg){
+  const el=document.getElementById("save-badge");
+  el.className="save-badge";el.onclick=null;clearTimeout(badgeTimer);
+  if(state==="syncing"){el.textContent=msg;el.classList.add("syncing");}
+  else if(state==="synced"){el.textContent=msg;el.classList.add("synced");badgeTimer=setTimeout(()=>{el.textContent="Sheets connected";},3000);}
+  else if(state==="error"){el.textContent=msg;el.classList.add("error");}
+  else{el.textContent=msg||"";}
 }
-
-// ── Delete ────────────────────────────────────────────────
-async function syncDelete(id) {
-  setBadge("syncing", "Deleting...");
-  try {
-    await api({ action: "deleteJob", id: String(id) });
-    setBadge("synced", "Saved to Google Sheets");
-  } catch(e) {
-    setBadge("error", "Delete failed — tap to retry");
-  }
+ 
+function getStage(id){return STAGES.find(s=>s.id===id)||STAGES[0];}
+function esc(s){return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");}
+ 
+function renderStats(){
+  document.getElementById("s-active").textContent=jobs.filter(j=>j.stage<12).length;
+  document.getElementById("s-ready").textContent=jobs.filter(j=>j.stage>=6&&j.stage<=9).length;
+  document.getElementById("s-need").textContent=jobs.filter(j=>j.stage<=2).length;
+  document.getElementById("s-done").textContent=jobs.filter(j=>j.stage>=12).length;
+  document.getElementById("sub-lbl").textContent=jobs.length+" jobs · tap a job to update";
 }
-
-// ── Badge ─────────────────────────────────────────────────
-function setBadge(state, msg) {
-  const el = document.getElementById("save-badge");
-  el.className = "save-badge";
-  el.onclick = null;
-  if (state==="syncing") { el.textContent = msg; el.classList.add("syncing"); }
-  else if (state==="synced") { el.textContent = msg; el.classList.add("synced"); setTimeout(()=>{ el.textContent="Sheets connected"; el.className="save-badge synced"; }, 2500); }
-  else if (state==="error") { el.textContent = msg; el.classList.add("error"); }
-  else { el.textContent = msg||""; }
-}
-
-// ── Render ────────────────────────────────────────────────
-function getStage(id) { return STAGES.find(s=>s.id===id)||STAGES[0]; }
-
-function renderStats() {
-  document.getElementById("s-active").textContent = jobs.filter(j=>j.stage<12).length;
-  document.getElementById("s-ready").textContent  = jobs.filter(j=>j.stage>=6&&j.stage<=9).length;
-  document.getElementById("s-need").textContent   = jobs.filter(j=>j.stage<=2).length;
-  document.getElementById("s-done").textContent   = jobs.filter(j=>j.stage>=12).length;
-  document.getElementById("sub-lbl").textContent  = jobs.length+" jobs · tap a job to update";
-}
-
-function renderFilters() {
-  const groups = ["all","early","mid","ready","install","done"];
-  const labels = {all:"All jobs",...GROUP_LABELS};
-  document.getElementById("filters").innerHTML = groups.map(g=>
+ 
+function renderFilters(){
+  const groups=["all","early","mid","ready","install","done"];
+  const labels={all:"All jobs",...GROUP_LABELS};
+  document.getElementById("filters").innerHTML=groups.map(g=>
     `<button class="fbtn${activeFilter===g?" active":""}" onclick="setFilter('${g}')">${labels[g]}</button>`
   ).join("");
 }
-
-function setFilter(g) { activeFilter=g; renderFilters(); renderJobs(); }
-
-function renderJobs() {
-  const list = document.getElementById("job-list");
-  const filtered = jobs.filter(j=>activeFilter==="all"||getStage(j.stage).group===activeFilter);
-  if (!filtered.length) { list.innerHTML='<div class="empty">No jobs in this stage</div>'; return; }
-  list.innerHTML = filtered.map(j=>{
-    const s = getStage(j.stage);
-    const dots = STAGES.map((_,i)=>`<div class="stage-dot${i<j.stage?" done":i===j.stage?" current":""}"></div>`).join("");
+ 
+function setFilter(g){activeFilter=g;renderFilters();renderJobs();}
+ 
+function renderJobs(){
+  const list=document.getElementById("job-list");
+  const filtered=jobs.filter(j=>activeFilter==="all"||getStage(j.stage).group===activeFilter);
+  if(sortMode==="stage-asc") filtered.sort((a,b)=>a.stage-b.stage);
+  else if(sortMode==="stage-desc") filtered.sort((a,b)=>b.stage-a.stage);
+  else if(sortMode==="name-asc") filtered.sort((a,b)=>a.name.localeCompare(b.name));
+  if(!filtered.length){list.innerHTML='<div class="empty">No jobs in this stage</div>';return;}
+  list.innerHTML=filtered.map(j=>{
+    const s=getStage(j.stage);
+    const dots=STAGES.map((_,i)=>`<div class="stage-dot${i<j.stage?" done":i===j.stage?" current":""}"></div>`).join("");
     return `<div class="job-card" onclick="openEdit(${j.id})">
       <div class="job-top">
         <span class="job-name">${esc(j.name)}</span>
         <span class="stage-badge" style="background:${s.bg};color:${s.color}">${s.label}</span>
       </div>
-      ${j.notes?`<div class="job-meta">${esc(j.notes)}</div>`:""}
+      ${j.address?`<div class="job-address">${esc(j.address)}</div>`:""}
+      ${j.notes?`<div class="job-notes">${esc(j.notes)}</div>`:""}
       <div class="stage-bar">${dots}</div>
     </div>`;
   }).join("");
 }
-
-function esc(s){return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");}
-
-function renderStageList() {
-  let html=""; let lastGroup="";
+ 
+function renderStageList(){
+  let html="";let lastGroup="";
   STAGES.forEach(s=>{
-    if (s.group!==lastGroup) { html+=`<div class="grp-lbl">${GROUP_LABELS[s.group]}</div>`; lastGroup=s.group; }
+    if(s.group!==lastGroup){html+=`<div class="grp-lbl">${GROUP_LABELS[s.group]}</div>`;lastGroup=s.group;}
     html+=`<div class="stage-item${tempStage===s.id?" selected":""}" onclick="selectStage(${s.id})">
       <span class="stage-num">${s.id+1}</span><span>${s.label}</span>
     </div>`;
   });
-  document.getElementById("stage-list").innerHTML = html;
+  document.getElementById("stage-list").innerHTML=html;
 }
-
-function selectStage(id) { tempStage=id; renderStageList(); }
-
-function renderAll() { renderStats(); renderFilters(); renderJobs(); }
-
-// ── Modal ─────────────────────────────────────────────────
-function openEdit(id) {
-  editingId=id; isAdding=false;
-  const job = jobs.find(j=>j.id===id);
-  if (!job) return;
-  tempStage = job.stage;
-  document.getElementById("modal-title").textContent = "Edit job";
-  document.getElementById("name-inp").value = job.name;
-  document.getElementById("notes-inp").value = job.notes;
-  document.getElementById("modal-btns").innerHTML = `
+ 
+function selectStage(id){tempStage=id;renderStageList();}
+function toggleSort(){
+  const modes=["default","stage-asc","stage-desc","name-asc"];
+  const labels={"default":"Sort: default","stage-asc":"Sort: stage (earliest first)","stage-desc":"Sort: stage (furthest first)","name-asc":"Sort: name A-Z"};
+  const idx=modes.indexOf(sortMode);
+  sortMode=modes[(idx+1)%modes.length];
+  const btn=document.getElementById("sort-btn");
+  btn.textContent=labels[sortMode];
+  btn.className=sortMode!=="default"?"sort-btn active":"sort-btn";
+  renderJobs();
+}
+function renderAll(){renderStats();renderFilters();renderJobs();}
+ 
+function openEdit(id){
+  editingId=id;isAdding=false;
+  const job=jobs.find(j=>j.id===id);if(!job)return;
+  tempStage=job.stage;
+  document.getElementById("modal-title").textContent="Edit job";
+  document.getElementById("name-inp").value=job.name;
+  document.getElementById("address-inp").value=job.address||"";
+  document.getElementById("notes-inp").value=job.notes||"";
+  document.getElementById("modal-btns").innerHTML=`
     <button class="btn danger" onclick="deleteJob()">Delete</button>
     <button class="btn" onclick="closeModal()">Cancel</button>
     <button class="btn primary" onclick="saveJob()">Save</button>`;
   renderStageList();
   document.getElementById("overlay").classList.add("open");
 }
-
-function openAdd() {
-  editingId=null; isAdding=true; tempStage=0;
-  document.getElementById("modal-title").textContent = "Add new customer";
-  document.getElementById("name-inp").value = "";
-  document.getElementById("notes-inp").value = "";
-  document.getElementById("modal-btns").innerHTML = `
+ 
+function openAdd(){
+  editingId=null;isAdding=true;tempStage=0;
+  document.getElementById("modal-title").textContent="Add new customer";
+  document.getElementById("name-inp").value="";
+  document.getElementById("address-inp").value="";
+  document.getElementById("notes-inp").value="";
+  document.getElementById("modal-btns").innerHTML=`
     <button class="btn" onclick="closeModal()">Cancel</button>
     <button class="btn primary" onclick="saveJob()">Add customer</button>`;
   renderStageList();
   document.getElementById("overlay").classList.add("open");
   setTimeout(()=>document.getElementById("name-inp").focus(),80);
 }
-
-function closeModal() {
+ 
+function closeModal(){
   document.getElementById("overlay").classList.remove("open");
-  editingId=null; isAdding=false;
+  editingId=null;isAdding=false;
 }
-
-async function saveJob() {
-  const name = document.getElementById("name-inp").value.trim();
-  if (!name) return;
-  const notes = document.getElementById("notes-inp").value.trim();
+ 
+async function saveJob(){
+  const name=document.getElementById("name-inp").value.trim();
+  if(!name)return;
+  const address=document.getElementById("address-inp").value.trim();
+  const notes=document.getElementById("notes-inp").value.trim();
   let job;
-  if (isAdding) {
-    job = { id: nextId++, name, stage: tempStage, notes, updatedAt: new Date().toISOString() };
+  if(isAdding){
+    job={id:nextId++,name,stage:tempStage,address,notes,updatedAt:new Date().toISOString()};
     jobs.push(job);
-  } else {
-    job = jobs.find(j=>j.id===editingId);
-    if (job) { job.name=name; job.stage=tempStage; job.notes=notes; job.updatedAt=new Date().toISOString(); }
+  }else{
+    job=jobs.find(j=>j.id===editingId);
+    if(job){job.name=name;job.address=address;job.stage=tempStage;job.notes=notes;job.updatedAt=new Date().toISOString();}
   }
-  closeModal();
-  renderAll();
+  closeModal();renderAll();
   await syncJob(job);
 }
-
-async function deleteJob() {
-  if (!confirm("Remove this customer from the list?")) return;
-  const id = editingId;
-  jobs = jobs.filter(j=>j.id!==id);
-  closeModal();
-  renderAll();
+ 
+async function deleteJob(){
+  if(!confirm("Remove this customer from the list?"))return;
+  const id=editingId;
+  jobs=jobs.filter(j=>j.id!==id);
+  closeModal();renderAll();
   await syncDelete(id);
 }
-
-document.getElementById("overlay").addEventListener("click", function(e){ if(e.target===this) closeModal(); });
+ 
+document.getElementById("overlay").addEventListener("click",function(e){if(e.target===this)closeModal();});
 </script>
 </body>
 </html>
