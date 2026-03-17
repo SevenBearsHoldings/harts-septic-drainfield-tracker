@@ -269,13 +269,13 @@ async function syncDelete(id){
 async function createBoth(evt){
   try{
     const data=await jsonp({action:"createEvent",event:JSON.stringify(evt)});
-    return data.eventId||"";
-  }catch(e){return "";}
+    return {eventId:data.eventId||"",taskId:data.taskId||""};
+  }catch(e){return {eventId:"",taskId:""};}
 }
 
 async function completeBoth(eventId,taskId){
-  if(!eventId)return;
-  try{await jsonp({action:"completeEvent",eventId});}catch(e){}
+  if(!eventId&&!taskId)return;
+  try{await jsonp({action:"completeEvent",eventId:eventId||"",taskId:taskId||""});}catch(e){}
 }
 
 // ── Badge ─────────────────────────────────────────────────
