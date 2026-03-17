@@ -95,6 +95,8 @@ body{background:var(--bg);color:var(--text);min-height:100vh;padding:1.25rem}
 .event-status.show{display:block}
 .empty{text-align:center;padding:2rem;color:var(--text3);font-size:13px}
 .loading-msg{text-align:center;padding:2rem;color:var(--text2);font-size:13px}
+.task-btn{font-size:11px;padding:2px 8px;border-radius:10px;border:0.5px solid var(--success-text);background:transparent;color:var(--success-text);cursor:pointer;margin-top:6px;display:inline-block}
+.task-btn:hover{background:var(--success-bg)}
 </style>
 </head>
 <body>
@@ -135,6 +137,22 @@ body{background:var(--bg);color:var(--text);min-height:100vh;padding:1.25rem}
   <div id="job-list"><div class="loading-msg">Loading jobs from Google Sheets...</div></div>
 </div>
 
+
+<div class="overlay" id="task-overlay">
+  <div class="modal">
+    <h2>Add task</h2>
+    <div class="field-lbl">Customer</div>
+    <input class="text-inp" id="task-customer-inp" type="text" readonly style="opacity:0.6"/>
+    <div class="field-lbl">Task description</div>
+    <input class="text-inp" id="task-desc-inp" type="text" placeholder="What needs to be done?"/>
+    <div class="field-lbl">Due date (optional)</div>
+    <input class="text-inp" id="task-date-inp" type="date"/>
+    <div class="modal-btns">
+      <button class="btn" onclick="closeTaskModal()">Cancel</button>
+      <button class="btn primary" onclick="submitTask()">Add to Google Tasks</button>
+    </div>
+  </div>
+</div>
 <div class="overlay" id="overlay">
   <div class="modal">
     <h2 id="modal-title">Edit job</h2>
@@ -162,7 +180,7 @@ body{background:var(--bg);color:var(--text);min-height:100vh;padding:1.25rem}
 <script>
 // ── Stage definitions ─────────────────────────────────────
 // CAL_STAGES = stages that trigger a calendar event
-const CAL_STAGES = new Set([0, 3, 6, 11]); // site visit, final quote, deposit/schedule, county inspection
+const CAL_STAGES = new Set([0, 6, 11, 12]); // site visit, final quote sent, date confirmed, county inspection
 
 const STAGES=[
   {id:0, label:"Site visit — verify drainfield failure", color:"#993C1D",bg:"#FAECE7",group:"early"},
@@ -185,7 +203,6 @@ const STAGES=[
 
 const CAL_LABELS={
   0:"Site visit — drainfield",
-  3:"Follow-up: quote sent",
   6:"Final quote follow-up",
   11:"Install day",
   12:"County inspection"
@@ -344,6 +361,7 @@ function renderJobs(){
       ${j.notes?`<div class="job-notes">${esc(j.notes)}</div>`:""}
       ${evtBadge}
       <div class="stage-bar">${dots}</div>
+      <button class="task-btn" onclick="event.stopPropagation();openTaskModal(${j.id})">+ task</button>
     </div>`;
   }).join("");
 }
@@ -502,6 +520,53 @@ async function deleteJob(){
 }
 
 document.getElementById("overlay").addEventListener("click",function(e){if(e.target===this)closeModal();});
+
+// ── Standalone task ───────────────────────────────────────
+let taskJobId = null;
+
+function openTaskModal(jobId) {
+  taskJobId = jobId;
+  const job = jobs.find(j => j.id === jobId);
+  if (!job) return;
+  document.getElementById("task-customer-inp").value = job.name + (job.address ? " — " + job.address : "");
+  document.getElementById("task-desc-inp").value = "";
+  // Default due date to tomorrow
+  const tomorrow = new Date();
+  tomorrow.setDate(tomorrow.getDate() + 1);
+  document.getElementById("task-date-inp").value = tomorrow.toISOString().slice(0,10);
+  document.getElementById("task-overlay").classList.add("open");
+  setTimeout(() => document.getElementById("task-desc-inp").focus(), 80);
+}
+
+function closeTaskModal() {
+  document.getElementById("task-overlay").classList.remove("open");
+  taskJobId = null;
+}
+
+async function submitTask() {
+  const desc = document.getElementById("task-desc-inp").value.trim();
+  if (!desc) return;
+  const job = jobs.find(j => j.id === taskJobId);
+  const dateVal = document.getElementById("task-date-inp").value;
+  const task = {
+    title: desc + (job ? " — " + job.name : ""),
+    notes: job ? (job.address || "") : "",
+    due: dateVal ? new Date(dateVal).toISOString() : ""
+  };
+  closeTaskModal();
+  setBadge("syncing", "Adding task...");
+  try {
+    await jsonp({ action: "addTask", task: JSON.stringify(task) });
+    setBadge("synced", "Task added to Google Tasks");
+  } catch(e) {
+    setBadge("error", "Could not add task — tap to retry");
+  }
+}
+
+document.getElementById("task-overlay").addEventListener("click", function(e) {
+  if (e.target === this) closeTaskModal();
+});
+
 </script>
 </body>
 </html>
