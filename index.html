@@ -95,6 +95,21 @@ body{background:var(--bg);color:var(--text);min-height:100vh;padding:1.25rem}
 .event-status.show{display:block}
 .empty{text-align:center;padding:2rem;color:var(--text3);font-size:13px}
 .loading-msg{text-align:center;padding:2rem;color:var(--text2);font-size:13px}
+.task-panel{margin-top:10px;border-top:0.5px solid var(--border);padding-top:10px}
+.task-panel-hdr{font-size:11px;color:var(--text2);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:8px;display:flex;align-items:center;justify-content:space-between}
+.task-row{display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:0.5px solid var(--border)}
+.task-check{width:18px;height:18px;border-radius:50%;border:1.5px solid var(--border2);background:transparent;cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center}
+.task-check:hover{border-color:var(--success-text);background:var(--success-bg)}
+.task-title{flex:1;font-size:13px;color:var(--text)}
+.task-due{font-size:11px;color:var(--text3);white-space:nowrap}
+.task-del{font-size:11px;color:var(--danger-text);cursor:pointer;padding:2px 6px;border-radius:4px;border:none;background:transparent}
+.task-del:hover{background:var(--danger-bg)}
+.task-add-row{display:flex;gap:6px;margin-top:8px;flex-wrap:wrap}
+.task-add-row input[type=text]{flex:1;min-width:120px}
+.task-add-row input[type=date]{width:130px}
+.task-add-btn{padding:6px 12px;border-radius:var(--radius-md);border:none;background:var(--success-bg);color:var(--success-text);font-size:12px;font-weight:500;cursor:pointer;white-space:nowrap}
+.task-loading{font-size:12px;color:var(--text3);padding:6px 0}
+
 .task-btn{font-size:11px;padding:2px 8px;border-radius:10px;border:0.5px solid var(--success-text);background:transparent;color:var(--success-text);cursor:pointer;margin-top:6px;display:inline-block}
 .task-btn:hover{background:var(--success-bg)}
 </style>
@@ -170,6 +185,19 @@ body{background:var(--bg);color:var(--text);min-height:100vh;padding:1.25rem}
     </div>
 
     <div id="event-status" class="event-status"></div>
+
+    <div class="task-panel" id="task-panel">
+      <div class="task-panel-hdr">
+        <span>Tasks</span>
+        <span id="task-panel-count" style="color:var(--text3);font-weight:400"></span>
+      </div>
+      <div id="task-list-inner"><div class="task-loading">Loading tasks...</div></div>
+      <div class="task-add-row">
+        <input class="text-inp" type="text" id="new-task-inp" placeholder="Add a task..."/>
+        <input class="text-inp" type="date" id="new-task-date"/>
+        <button class="task-add-btn" onclick="addTaskFromPanel()">Add</button>
+      </div>
+    </div>
 
     <div class="field-lbl">Notes</div>
     <input class="text-inp" id="notes-inp" type="text" placeholder="Add notes..."/>
@@ -361,7 +389,6 @@ function renderJobs(){
       ${j.notes?`<div class="job-notes">${esc(j.notes)}</div>`:""}
       ${evtBadge}
       <div class="stage-bar">${dots}</div>
-      <button class="task-btn" onclick="event.stopPropagation();openTaskModal(${j.id})">+ task</button>
     </div>`;
   }).join("");
 }
@@ -421,7 +448,11 @@ function openEdit(id){
   }
   document.getElementById("modal-btns").innerHTML=buildModalBtns(job);
   renderStageList(job.stage);
+  const tmrw=new Date();tmrw.setDate(tmrw.getDate()+1);
+  document.getElementById("new-task-date").value=tmrw.toISOString().slice(0,10);
+  document.getElementById("task-list-inner").innerHTML='<div class="task-loading">Loading...</div>';
   document.getElementById("overlay").classList.add("open");
+  loadTasksForJob(job.name);
 }
 
 function buildModalBtns(job){
@@ -447,12 +478,14 @@ function openAdd(){
     <button class="btn" onclick="closeModal()">Cancel</button>
     <button class="btn primary" onclick="saveJob()">Add customer</button>`;
   renderStageList(0);
+  document.getElementById("task-panel").style.display="none";
   document.getElementById("overlay").classList.add("open");
   setTimeout(()=>document.getElementById("name-inp").focus(),80);
 }
 
 function closeModal(){
   document.getElementById("overlay").classList.remove("open");
+  document.getElementById("task-panel").style.display="";
   editingId=null;isAdding=false;
 }
 
@@ -519,53 +552,87 @@ async function deleteJob(){
   await syncDelete(id);
 }
 
-document.getElementById("overlay").addEventListener("click",function(e){if(e.target===this)closeModal();});
 
-// ── Standalone task ───────────────────────────────────────
-let taskJobId = null;
+// ── Per-customer task panel ───────────────────────────────
 
-function openTaskModal(jobId) {
-  taskJobId = jobId;
-  const job = jobs.find(j => j.id === jobId);
-  if (!job) return;
-  document.getElementById("task-customer-inp").value = job.name + (job.address ? " — " + job.address : "");
-  document.getElementById("task-desc-inp").value = "";
-  // Default due date to tomorrow
-  const tomorrow = new Date();
-  tomorrow.setDate(tomorrow.getDate() + 1);
-  document.getElementById("task-date-inp").value = tomorrow.toISOString().slice(0,10);
-  document.getElementById("task-overlay").classList.add("open");
-  setTimeout(() => document.getElementById("task-desc-inp").focus(), 80);
-}
-
-function closeTaskModal() {
-  document.getElementById("task-overlay").classList.remove("open");
-  taskJobId = null;
-}
-
-async function submitTask() {
-  const desc = document.getElementById("task-desc-inp").value.trim();
-  if (!desc) return;
-  const job = jobs.find(j => j.id === taskJobId);
-  const dateVal = document.getElementById("task-date-inp").value;
-  const task = {
-    title: desc + (job ? " — " + job.name : ""),
-    notes: job ? (job.address || "") : "",
-    due: dateVal ? new Date(dateVal).toISOString() : ""
-  };
-  closeTaskModal();
-  setBadge("syncing", "Adding task...");
+async function loadTasksForJob(jobName) {
+  const inner = document.getElementById("task-list-inner");
+  const count = document.getElementById("task-panel-count");
+  inner.innerHTML = '<div class="task-loading">Loading...</div>';
   try {
-    await jsonp({ action: "addTask", task: JSON.stringify(task) });
-    setBadge("synced", "Task added to Google Tasks");
+    const data = await jsonp({ action: "getTasksForJob", jobName: encodeURIComponent(jobName) });
+    const tasks = data.tasks || [];
+    count.textContent = tasks.length ? tasks.length + " open" : "";
+    if (!tasks.length) {
+      inner.innerHTML = '<div class="task-loading">No open tasks</div>';
+      return;
+    }
+    inner.innerHTML = tasks.map(t => {
+      const due = t.due ? '<span class="task-due">' + new Date(t.due).toLocaleDateString("en-US",{month:"short",day:"numeric"}) + '</span>' : '';
+      return `<div class="task-row" id="tr-${t.id}">
+        <div class="task-check" onclick="checkOffTask('${t.id}','${encodeURIComponent(jobName)}')"></div>
+        <span class="task-title">${esc(t.title.replace(jobName + ' — ','').replace(jobName + ' - ',''))}</span>
+        ${due}
+        <button class="task-del" onclick="removeTask('${t.id}','${encodeURIComponent(jobName)}')">✕</button>
+      </div>`;
+    }).join('');
   } catch(e) {
-    setBadge("error", "Could not add task — tap to retry");
+    inner.innerHTML = '<div class="task-loading">Could not load tasks</div>';
   }
 }
 
-document.getElementById("task-overlay").addEventListener("click", function(e) {
-  if (e.target === this) closeTaskModal();
-});
+async function checkOffTask(taskId, encodedName) {
+  const row = document.getElementById("tr-" + taskId);
+  if (row) row.style.opacity = "0.4";
+  try {
+    await jsonp({ action: "completeTask", taskId });
+    if (row) row.remove();
+    const jobName = decodeURIComponent(encodedName);
+    const job = jobs.find(j => j.name === jobName);
+    if (job) loadTasksForJob(job.name);
+  } catch(e) {
+    if (row) row.style.opacity = "1";
+  }
+}
+
+async function removeTask(taskId, encodedName) {
+  if (!confirm("Delete this task?")) return;
+  const row = document.getElementById("tr-" + taskId);
+  if (row) row.remove();
+  try {
+    await jsonp({ action: "deleteTask", taskId });
+    const jobName = decodeURIComponent(encodedName);
+    const job = jobs.find(j => j.name === jobName);
+    if (job) loadTasksForJob(job.name);
+  } catch(e) {}
+}
+
+async function addTaskFromPanel() {
+  const inp = document.getElementById("new-task-inp");
+  const dateInp = document.getElementById("new-task-date");
+  const desc = inp.value.trim();
+  if (!desc) return;
+  const job = editingId ? jobs.find(j => j.id === editingId) : null;
+  if (!job) return;
+  const task = {
+    title: job.name + " — " + desc,
+    notes: job.address || "",
+    due: dateInp.value ? new Date(dateInp.value).toISOString() : ""
+  };
+  inp.value = "";
+  dateInp.value = "";
+  setBadge("syncing", "Adding task...");
+  try {
+    await jsonp({ action: "addTask", task: JSON.stringify(task) });
+    setBadge("synced", "Task added");
+    loadTasksForJob(job.name);
+  } catch(e) {
+    setBadge("error", "Could not add task");
+  }
+}
+
+document.getElementById("overlay").addEventListener("click",function(e){if(e.target===this)closeModal();});
+
 
 </script>
 </body>
