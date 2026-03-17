@@ -7,7 +7,7 @@
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
-  --bg:#ffffff;--bg2:#f5f5f3;
+  --bg:#ffffff;--bg2:#f5f5f3;--bg3:#efefeb;
   --text:#1a1a18;--text2:#6b6b68;--text3:#a0a09c;
   --border:rgba(0,0,0,0.12);--border2:rgba(0,0,0,0.22);
   --info-bg:#E6F1FB;--info-text:#0C447C;
@@ -18,7 +18,7 @@
   font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
 }
 @media(prefers-color-scheme:dark){:root{
-  --bg:#1e1e1c;--bg2:#2a2a28;
+  --bg:#1e1e1c;--bg2:#2a2a28;--bg3:#323230;
   --text:#f0f0ec;--text2:#a0a09c;--text3:#6b6b68;
   --border:rgba(255,255,255,0.1);--border2:rgba(255,255,255,0.2);
   --info-bg:#0c2a44;--info-text:#85B7EB;
@@ -64,47 +64,35 @@ body{background:var(--bg);color:var(--text);min-height:100vh;padding:1.25rem}
 .stage-badge{font-size:11px;padding:3px 8px;border-radius:20px;font-weight:500;white-space:nowrap}
 .job-address{font-size:12px;color:var(--text3);margin-top:2px}
 .job-notes{font-size:12px;color:var(--text2);margin-top:2px}
-.job-task-pill{font-size:11px;color:var(--info-text);background:var(--info-bg);padding:2px 8px;border-radius:20px;margin-top:5px;display:inline-block}
+.job-event{font-size:11px;color:var(--success-text);background:var(--success-bg);display:inline-block;padding:2px 7px;border-radius:10px;margin-top:4px}
 .stage-bar{display:flex;gap:2px;margin-top:8px}
 .stage-dot{height:4px;flex:1;border-radius:2px;background:var(--border)}
 .stage-dot.done{background:#1D9E75}
 .stage-dot.current{background:#378ADD}
-.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:100;align-items:flex-start;justify-content:center;padding:1rem;overflow-y:auto}
+.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:100;align-items:center;justify-content:center;padding:1rem}
 .overlay.open{display:flex}
-.modal{background:var(--bg);border-radius:var(--radius-lg);border:0.5px solid var(--border2);padding:1.25rem;width:100%;max-width:480px;margin:auto}
-.modal h2{font-size:16px;font-weight:500;margin-bottom:0.75rem}
-.field-lbl{font-size:11px;color:var(--text2);text-transform:uppercase;letter-spacing:0.05em;margin:12px 0 5px}
-.stage-list{display:flex;flex-direction:column;gap:4px;max-height:180px;overflow-y:auto}
-.stage-item{display:flex;align-items:center;gap:10px;padding:7px 10px;border-radius:var(--radius-md);border:0.5px solid var(--border);cursor:pointer;font-size:13px;color:var(--text)}
+.modal{background:var(--bg);border-radius:var(--radius-lg);border:0.5px solid var(--border2);padding:1.25rem;width:100%;max-width:460px;max-height:88vh;overflow-y:auto}
+.modal h2{font-size:16px;font-weight:500;margin-bottom:1rem}
+.field-lbl{font-size:11px;color:var(--text2);text-transform:uppercase;letter-spacing:0.05em;margin:10px 0 5px}
+.stage-list{display:flex;flex-direction:column;gap:4px}
+.stage-item{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:var(--radius-md);border:0.5px solid var(--border);cursor:pointer;font-size:13px;color:var(--text)}
 .stage-item:hover{background:var(--bg2)}
 .stage-item.selected{background:var(--info-bg);border-color:transparent;color:var(--info-text);font-weight:500}
+.stage-item.cal-stage{border-color:var(--success-text)}
 .stage-num{font-size:11px;color:var(--text3);min-width:18px}
-.grp-lbl{font-size:11px;color:var(--text2);text-transform:uppercase;letter-spacing:0.05em;margin:8px 0 3px}
+.cal-tag{font-size:10px;padding:1px 5px;border-radius:8px;background:var(--success-bg);color:var(--success-text);margin-left:auto}
+.grp-lbl{font-size:11px;color:var(--text2);text-transform:uppercase;letter-spacing:0.05em;margin:10px 0 4px}
+.date-picker-box{background:var(--bg2);border-radius:var(--radius-md);padding:0.75rem;margin-top:8px;border:0.5px solid var(--success-text)}
+.date-picker-box p{font-size:12px;color:var(--success-text);margin-bottom:6px;font-weight:500}
 .modal-btns{display:flex;gap:8px;margin-top:1rem}
 .btn{flex:1;padding:8px;border-radius:var(--radius-md);border:0.5px solid var(--border2);background:transparent;color:var(--text);cursor:pointer;font-size:13px;font-family:inherit}
 .btn:hover{background:var(--bg2)}
 .btn.primary{background:var(--info-bg);color:var(--info-text);border-color:transparent;font-weight:500}
 .btn.danger{color:var(--danger-text);border-color:#F09595}
 .btn.danger:hover{background:var(--danger-bg)}
-.divider{border:none;border-top:0.5px solid var(--border);margin:14px 0}
-.tasks-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
-.tasks-hdr-lbl{font-size:11px;color:var(--text2);text-transform:uppercase;letter-spacing:0.05em}
-.tasks-hint{font-size:11px;color:var(--text3);margin-top:6px;line-height:1.5}
-.task-add-row{display:flex;gap:6px;margin-bottom:8px}
-.task-add-row input{flex:1;padding:7px 10px;font-size:13px;border:0.5px solid var(--border2);border-radius:var(--radius-md);background:transparent;color:var(--text);font-family:inherit}
-.task-add-row input:focus{outline:none;border-color:#378ADD}
-.task-add-btn{padding:7px 14px;border-radius:var(--radius-md);border:none;background:var(--info-bg);color:var(--info-text);font-size:13px;font-weight:500;cursor:pointer;white-space:nowrap}
-.task-list{display:flex;flex-direction:column;gap:4px}
-.task-item{display:flex;align-items:center;gap:8px;padding:7px 10px;border-radius:var(--radius-md);border:0.5px solid var(--border);background:var(--bg2)}
-.task-check{width:18px;height:18px;border:1.5px solid var(--border2);border-radius:4px;cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center;background:var(--bg);transition:all 0.15s}
-.task-check.done{background:var(--success-bg);border-color:var(--success-text)}
-.task-check.done::after{content:"✓";font-size:11px;color:var(--success-text);font-weight:500}
-.task-title{flex:1;font-size:13px;color:var(--text);line-height:1.4}
-.task-title.done{text-decoration:line-through;color:var(--text3)}
-.task-del{font-size:18px;line-height:1;color:var(--text3);cursor:pointer;border:none;background:none;padding:0 2px}
-.task-del:hover{color:var(--danger-text)}
-.task-loading{font-size:12px;color:var(--text3);padding:0.5rem 0;text-align:center}
-.task-empty{font-size:12px;color:var(--text3);padding:0.5rem 0}
+.btn.success{background:var(--success-bg);color:var(--success-text);border-color:transparent;font-weight:500}
+.event-status{font-size:12px;color:var(--success-text);margin-top:8px;padding:6px 10px;background:var(--success-bg);border-radius:var(--radius-md);display:none}
+.event-status.show{display:block}
 .empty{text-align:center;padding:2rem;color:var(--text3);font-size:13px}
 .loading-msg{text-align:center;padding:2rem;color:var(--text2);font-size:13px}
 </style>
@@ -150,61 +138,65 @@ body{background:var(--bg);color:var(--text);min-height:100vh;padding:1.25rem}
 <div class="overlay" id="overlay">
   <div class="modal">
     <h2 id="modal-title">Edit job</h2>
-
     <div class="field-lbl">Customer name</div>
     <input class="text-inp" id="name-inp" type="text" placeholder="Full name"/>
-
     <div class="field-lbl">Address</div>
     <input class="text-inp" id="address-inp" type="text" placeholder="Street address, city"/>
-
     <div class="field-lbl">Stage</div>
     <div class="stage-list" id="stage-list"></div>
 
+    <div id="date-picker-box" class="date-picker-box" style="display:none">
+      <p id="date-picker-label">Set calendar event date & time</p>
+      <input class="text-inp" id="event-date-inp" type="datetime-local" style="margin-bottom:6px"/>
+      <input class="text-inp" id="event-title-inp" type="text" placeholder="Event title (auto-filled)"/>
+    </div>
+
+    <div id="event-status" class="event-status"></div>
+
     <div class="field-lbl">Notes</div>
     <input class="text-inp" id="notes-inp" type="text" placeholder="Add notes..."/>
-
     <div class="modal-btns" id="modal-btns"></div>
-
-    <div id="tasks-section" style="display:none">
-      <hr class="divider"/>
-      <div class="tasks-hdr">
-        <span class="tasks-hdr-lbl">Next steps</span>
-        <span id="tasks-status" style="font-size:11px;color:var(--text3)"></span>
-      </div>
-      <div class="task-add-row">
-        <input type="text" id="task-inp" placeholder="Add a next step..." onkeydown="if(event.key==='Enter')addTaskItem()"/>
-        <button class="task-add-btn" onclick="addTaskItem()">Add</button>
-      </div>
-      <div class="task-list" id="task-list"></div>
-      <div class="tasks-hint">Syncs to "Hart's Septic Operations" in your Google Tasks app</div>
-    </div>
   </div>
 </div>
 
 <script>
+// ── Stage definitions ─────────────────────────────────────
+// CAL_STAGES = stages that trigger a calendar event
+const CAL_STAGES = new Set([0, 3, 6, 11]); // site visit, final quote, deposit/schedule, county inspection
+
 const STAGES=[
-  {id:0,label:"Watching system",color:"#5F5E5A",bg:"#F1EFE8",group:"early"},
-  {id:1,label:"Replace confirmed",color:"#185FA5",bg:"#E6F1FB",group:"early"},
-  {id:2,label:"Initial quote sent",color:"#185FA5",bg:"#E6F1FB",group:"early"},
-  {id:3,label:"Soil report ordered",color:"#BA7517",bg:"#FAEEDA",group:"mid"},
-  {id:4,label:"County permit",color:"#BA7517",bg:"#FAEEDA",group:"mid"},
-  {id:5,label:"Final quote sent",color:"#BA7517",bg:"#FAEEDA",group:"mid"},
-  {id:6,label:"Quote accepted / deposit",color:"#0F6E56",bg:"#E1F5EE",group:"ready"},
-  {id:7,label:"On schedule",color:"#0F6E56",bg:"#E1F5EE",group:"ready"},
-  {id:8,label:"Supplies ordered",color:"#0F6E56",bg:"#E1F5EE",group:"ready"},
-  {id:9,label:"Equipment rented",color:"#0F6E56",bg:"#E1F5EE",group:"ready"},
-  {id:10,label:"Date confirmed",color:"#0F6E56",bg:"#E1F5EE",group:"install"},
-  {id:11,label:"County inspection scheduled",color:"#533AB7",bg:"#EEEDFE",group:"install"},
-  {id:12,label:"Final payment received",color:"#533AB7",bg:"#EEEDFE",group:"done"},
-  {id:13,label:"30-day follow-up",color:"#533AB7",bg:"#EEEDFE",group:"done"},
-  {id:14,label:"90-day follow-up — complete",color:"#3C3489",bg:"#EEEDFE",group:"done"}
+  {id:0, label:"Site visit — verify drainfield failure", color:"#993C1D",bg:"#FAECE7",group:"early"},
+  {id:1, label:"Watching system",                        color:"#5F5E5A",bg:"#F1EFE8",group:"early"},
+  {id:2, label:"Replace confirmed",                      color:"#185FA5",bg:"#E6F1FB",group:"early"},
+  {id:3, label:"Initial quote sent",                     color:"#185FA5",bg:"#E6F1FB",group:"early"},
+  {id:4, label:"Soil report ordered",                    color:"#BA7517",bg:"#FAEEDA",group:"mid"},
+  {id:5, label:"County permit",                          color:"#BA7517",bg:"#FAEEDA",group:"mid"},
+  {id:6, label:"Final quote sent",                       color:"#BA7517",bg:"#FAEEDA",group:"mid"},
+  {id:7, label:"Quote accepted / deposit",               color:"#0F6E56",bg:"#E1F5EE",group:"ready"},
+  {id:8, label:"On schedule",                            color:"#0F6E56",bg:"#E1F5EE",group:"ready"},
+  {id:9, label:"Supplies ordered",                       color:"#0F6E56",bg:"#E1F5EE",group:"ready"},
+  {id:10,label:"Equipment rented",                       color:"#0F6E56",bg:"#E1F5EE",group:"ready"},
+  {id:11,label:"Date confirmed",                         color:"#0F6E56",bg:"#E1F5EE",group:"install"},
+  {id:12,label:"County inspection scheduled",            color:"#533AB7",bg:"#EEEDFE",group:"install"},
+  {id:13,label:"Final payment received",                 color:"#533AB7",bg:"#EEEDFE",group:"done"},
+  {id:14,label:"30-day follow-up",                       color:"#533AB7",bg:"#EEEDFE",group:"done"},
+  {id:15,label:"90-day follow-up — complete",            color:"#3C3489",bg:"#EEEDFE",group:"done"}
 ];
+
+const CAL_LABELS={
+  0:"Site visit — drainfield",
+  3:"Follow-up: quote sent",
+  6:"Final quote follow-up",
+  11:"Install day",
+  12:"County inspection"
+};
+
 const GROUP_LABELS={early:"Early stage",mid:"Quoting & permits",ready:"Deposit & scheduling",install:"Active install",done:"Complete"};
 
 let SCRIPT_URL=localStorage.getItem("harts-script-url")||"";
-let jobs=[],nextId=14,activeFilter="all",editingId=null,isAdding=false,tempStage=0,cbCounter=0,sortMode="default";
-let currentTasks=[],currentJobName="",taskCounts={};
+let jobs=[],nextId=14,activeFilter="all",editingId=null,isAdding=false,tempStage=0,sortMode="default",cbCounter=0;
 
+// ── JSONP ─────────────────────────────────────────────────
 function jsonp(params){
   return new Promise((resolve,reject)=>{
     const cbName="__cb"+Date.now()+"_"+(cbCounter++);
@@ -212,15 +204,16 @@ function jsonp(params){
     Object.entries(params).forEach(([k,v])=>url.searchParams.set(k,v));
     url.searchParams.set("callback",cbName);
     const script=document.createElement("script");
-    const timer=setTimeout(()=>{cleanup();reject(new Error("Timed out"));},20000);
+    const timer=setTimeout(()=>{cleanup();reject(new Error("Request timed out"));},20000);
     window[cbName]=function(data){cleanup();if(data&&data.error)reject(new Error(data.error));else resolve(data);};
     function cleanup(){clearTimeout(timer);delete window[cbName];if(script.parentNode)script.parentNode.removeChild(script);}
-    script.onerror=()=>{cleanup();reject(new Error("Load failed"));};
+    script.onerror=()=>{cleanup();reject(new Error("Script load failed"));};
     script.src=url.toString();
     document.head.appendChild(script);
   });
 }
 
+// ── Init ──────────────────────────────────────────────────
 window.addEventListener("DOMContentLoaded",()=>{
   if(SCRIPT_URL){
     document.getElementById("setup-banner").style.display="none";
@@ -232,9 +225,11 @@ window.addEventListener("DOMContentLoaded",()=>{
 function connectSheet(){
   const url=document.getElementById("script-url-inp").value.trim();
   if(!url.startsWith("https://script.google.com/macros/s/")){
-    alert("URL should start with:\nhttps://script.google.com/macros/s/");return;
+    alert("That doesn't look right. The URL should start with:\nhttps://script.google.com/macros/s/");
+    return;
   }
-  SCRIPT_URL=url;localStorage.setItem("harts-script-url",url);
+  SCRIPT_URL=url;
+  localStorage.setItem("harts-script-url",url);
   document.getElementById("setup-banner").style.display="none";
   document.getElementById("app").style.display="block";
   loadJobs();
@@ -245,6 +240,7 @@ function showSettings(){
   if(url&&url.trim()){SCRIPT_URL=url.trim();localStorage.setItem("harts-script-url",SCRIPT_URL);loadJobs();}
 }
 
+// ── API ───────────────────────────────────────────────────
 async function loadJobs(){
   setBadge("syncing","Loading...");
   try{
@@ -254,7 +250,7 @@ async function loadJobs(){
   }catch(e){
     setBadge("error","Could not reach sheet — tap to retry");
     document.getElementById("save-badge").onclick=loadJobs;
-    document.getElementById("job-list").innerHTML='<div class="loading-msg">Could not load. Check Settings.<br><small>'+esc(e.message)+'</small></div>';
+    document.getElementById("job-list").innerHTML='<div class="loading-msg">Could not load. Check Settings.<br><br><small>'+esc(e.message)+'</small></div>';
   }
 }
 
@@ -270,23 +266,40 @@ async function syncDelete(id){
   catch(e){setBadge("error","Delete failed");}
 }
 
+async function createBoth(evt){
+  try{
+    const data=await jsonp({action:"createEvent",event:JSON.stringify(evt)});
+    return data.eventId||"";
+  }catch(e){return "";}
+}
+
+async function completeBoth(eventId,taskId){
+  if(!eventId)return;
+  try{await jsonp({action:"completeEvent",eventId});}catch(e){}
+}
+
+// ── Badge ─────────────────────────────────────────────────
 let badgeTimer=null;
 function setBadge(state,msg){
   const el=document.getElementById("save-badge");
   el.className="save-badge";el.onclick=null;clearTimeout(badgeTimer);
   if(state==="syncing"){el.textContent=msg;el.classList.add("syncing");}
-  else if(state==="synced"){el.textContent=msg;el.classList.add("synced");badgeTimer=setTimeout(()=>{el.textContent="Sheets connected";el.className="save-badge synced";},3000);}
+  else if(state==="synced"){el.textContent=msg;el.classList.add("synced");badgeTimer=setTimeout(()=>{el.textContent="Sheets connected";},3000);}
   else if(state==="error"){el.textContent=msg;el.classList.add("error");}
+  else{el.textContent=msg||"";}
 }
 
+// ── Helpers ───────────────────────────────────────────────
 function getStage(id){return STAGES.find(s=>s.id===id)||STAGES[0];}
 function esc(s){return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");}
+function fmtDate(iso){try{return new Date(iso).toLocaleDateString("en-US",{month:"short",day:"numeric",year:"numeric",hour:"numeric",minute:"2-digit"});}catch(e){return iso;}}
 
+// ── Render ────────────────────────────────────────────────
 function renderStats(){
-  document.getElementById("s-active").textContent=jobs.filter(j=>j.stage<12).length;
-  document.getElementById("s-ready").textContent=jobs.filter(j=>j.stage>=6&&j.stage<=9).length;
-  document.getElementById("s-need").textContent=jobs.filter(j=>j.stage<=2).length;
-  document.getElementById("s-done").textContent=jobs.filter(j=>j.stage>=12).length;
+  document.getElementById("s-active").textContent=jobs.filter(j=>j.stage<13).length;
+  document.getElementById("s-ready").textContent=jobs.filter(j=>j.stage>=7&&j.stage<=10).length;
+  document.getElementById("s-need").textContent=jobs.filter(j=>j.stage<=3).length;
+  document.getElementById("s-done").textContent=jobs.filter(j=>j.stage>=13).length;
   document.getElementById("sub-lbl").textContent=jobs.length+" jobs · tap a job to update";
 }
 
@@ -314,15 +327,14 @@ function toggleSort(){
 function renderJobs(){
   const list=document.getElementById("job-list");
   const filtered=jobs.filter(j=>activeFilter==="all"||getStage(j.stage).group===activeFilter);
-  if(sortMode==="stage-asc") filtered.sort((a,b)=>a.stage-b.stage);
-  else if(sortMode==="stage-desc") filtered.sort((a,b)=>b.stage-a.stage);
-  else if(sortMode==="name-asc") filtered.sort((a,b)=>a.name.localeCompare(b.name));
+  if(sortMode==="stage-asc")filtered.sort((a,b)=>a.stage-b.stage);
+  else if(sortMode==="stage-desc")filtered.sort((a,b)=>b.stage-a.stage);
+  else if(sortMode==="name-asc")filtered.sort((a,b)=>a.name.localeCompare(b.name));
   if(!filtered.length){list.innerHTML='<div class="empty">No jobs in this stage</div>';return;}
   list.innerHTML=filtered.map(j=>{
     const s=getStage(j.stage);
     const dots=STAGES.map((_,i)=>`<div class="stage-dot${i<j.stage?" done":i===j.stage?" current":""}"></div>`).join("");
-    const tc=taskCounts[j.name];
-    const taskPill=tc&&tc.open>0?`<div class="job-task-pill">${tc.open} next step${tc.open!==1?"s":""}</div>`:"";
+    const evtBadge=j.eventDate?`<div class="job-event">Cal + Task: ${fmtDate(j.eventDate)}</div>`:"";
     return `<div class="job-card" onclick="openEdit(${j.id})">
       <div class="job-top">
         <span class="job-name">${esc(j.name)}</span>
@@ -330,119 +342,49 @@ function renderJobs(){
       </div>
       ${j.address?`<div class="job-address">${esc(j.address)}</div>`:""}
       ${j.notes?`<div class="job-notes">${esc(j.notes)}</div>`:""}
-      ${taskPill}
+      ${evtBadge}
       <div class="stage-bar">${dots}</div>
     </div>`;
   }).join("");
 }
 
-function renderStageList(){
+function renderStageList(currentStage){
   let html="";let lastGroup="";
   STAGES.forEach(s=>{
     if(s.group!==lastGroup){html+=`<div class="grp-lbl">${GROUP_LABELS[s.group]}</div>`;lastGroup=s.group;}
-    html+=`<div class="stage-item${tempStage===s.id?" selected":""}" onclick="selectStage(${s.id})">
-      <span class="stage-num">${s.id+1}</span><span>${s.label}</span>
+    const calTag=CAL_STAGES.has(s.id)?`<span class="cal-tag">+ calendar</span>`:"";
+    html+=`<div class="stage-item${tempStage===s.id?" selected":""}${CAL_STAGES.has(s.id)?" cal-stage":""}" onclick="selectStage(${s.id})">
+      <span class="stage-num">${s.id+1}</span><span>${s.label}</span>${calTag}
     </div>`;
   });
   document.getElementById("stage-list").innerHTML=html;
 }
 
-function selectStage(id){tempStage=id;renderStageList();}
+function selectStage(id){
+  tempStage=id;
+  renderStageList();
+  // Show date picker if this stage triggers a calendar event
+  const box=document.getElementById("date-picker-box");
+  const lbl=document.getElementById("date-picker-label");
+  const titleInp=document.getElementById("event-title-inp");
+  if(CAL_STAGES.has(id)){
+    const job=editingId?jobs.find(j=>j.id===editingId):null;
+    const name=document.getElementById("name-inp").value||"Customer";
+    const defaultTitle=(CAL_LABELS[id]||STAGES.find(s=>s.id===id).label)+" — "+name;
+    lbl.textContent="Set date & time for: "+STAGES.find(s=>s.id===id).label;
+    titleInp.value=defaultTitle;
+    // Default datetime to tomorrow 9am
+    const d=new Date();d.setDate(d.getDate()+1);d.setHours(9,0,0,0);
+    document.getElementById("event-date-inp").value=d.toISOString().slice(0,16);
+    box.style.display="block";
+  } else {
+    box.style.display="none";
+  }
+}
+
 function renderAll(){renderStats();renderFilters();renderJobs();}
 
-// ── Tasks ────────────────────────────────────────────────
-
-function renderTasks(){
-  const list=document.getElementById("task-list");
-  if(!currentTasks.length){
-    list.innerHTML='<div class="task-empty">No next steps yet — add one above</div>';
-    return;
-  }
-  const open=currentTasks.filter(t=>!t.completed);
-  const done=currentTasks.filter(t=>t.completed);
-  const all=[...open,...done];
-  list.innerHTML=all.map(t=>`
-    <div class="task-item" id="ti-${t.id}">
-      <div class="task-check${t.completed?" done":""}" onclick="toggleTask('${t.id}')"></div>
-      <span class="task-title${t.completed?" done":""}">${esc(t.title)}</span>
-      <button class="task-del" onclick="removeTask('${t.id}')" title="Delete">×</button>
-    </div>`).join("");
-}
-
-async function loadTasks(jobName){
-  currentJobName=jobName;currentTasks=[];
-  document.getElementById("task-list").innerHTML='<div class="task-loading">Loading next steps...</div>';
-  document.getElementById("tasks-status").textContent="";
-  try{
-    const data=await jsonp({action:"getTasks",jobName});
-    currentTasks=data.tasks||[];
-    const open=currentTasks.filter(t=>!t.completed).length;
-    taskCounts[jobName]={open,total:currentTasks.length};
-    document.getElementById("tasks-status").textContent=open+" open";
-    renderTasks();
-    renderJobs();
-  }catch(e){
-    document.getElementById("task-list").innerHTML='<div class="task-loading">Could not load tasks — Tasks API may need to be enabled in Apps Script</div>';
-  }
-}
-
-async function addTaskItem(){
-  const inp=document.getElementById("task-inp");
-  const title=inp.value.trim();
-  if(!title)return;
-  inp.value="";
-  const placeholder={id:"tmp-"+Date.now(),title,completed:false};
-  currentTasks.unshift(placeholder);
-  renderTasks();
-  try{
-    const data=await jsonp({action:"addTask",jobName:currentJobName,title});
-    const idx=currentTasks.findIndex(t=>t.id===placeholder.id);
-    if(idx>-1) currentTasks[idx]=data.task;
-    const open=currentTasks.filter(t=>!t.completed).length;
-    taskCounts[currentJobName]={open,total:currentTasks.length};
-    document.getElementById("tasks-status").textContent=open+" open";
-    renderTasks();renderJobs();
-  }catch(e){
-    currentTasks=currentTasks.filter(t=>t.id!==placeholder.id);
-    renderTasks();
-    alert("Could not add task: "+e.message);
-  }
-}
-
-async function toggleTask(taskId){
-  const task=currentTasks.find(t=>t.id===taskId);
-  if(!task)return;
-  task.completed=!task.completed;
-  renderTasks();
-  const open=currentTasks.filter(t=>!t.completed).length;
-  taskCounts[currentJobName]={open,total:currentTasks.length};
-  document.getElementById("tasks-status").textContent=open+" open";
-  renderJobs();
-  try{
-    await jsonp({action:"completeTask",jobName:currentJobName,taskId});
-  }catch(e){
-    task.completed=!task.completed;
-    renderTasks();
-  }
-}
-
-async function removeTask(taskId){
-  const task=currentTasks.find(t=>t.id===taskId);
-  if(!task||!confirm('Remove "'+task.title+'"?'))return;
-  currentTasks=currentTasks.filter(t=>t.id!==taskId);
-  const open=currentTasks.filter(t=>!t.completed).length;
-  taskCounts[currentJobName]={open,total:currentTasks.length};
-  document.getElementById("tasks-status").textContent=open+" open";
-  renderTasks();renderJobs();
-  try{
-    await jsonp({action:"deleteTask",jobName:currentJobName,taskId});
-  }catch(e){
-    alert("Could not delete task: "+e.message);
-  }
-}
-
-// ── Modal ────────────────────────────────────────────────
-
+// ── Modal ─────────────────────────────────────────────────
 function openEdit(id){
   editingId=id;isAdding=false;
   const job=jobs.find(j=>j.id===id);if(!job)return;
@@ -451,15 +393,28 @@ function openEdit(id){
   document.getElementById("name-inp").value=job.name;
   document.getElementById("address-inp").value=job.address||"";
   document.getElementById("notes-inp").value=job.notes||"";
-  document.getElementById("modal-btns").innerHTML=`
-    <button class="btn danger" onclick="deleteJob()">Delete</button>
-    <button class="btn" onclick="closeModal()">Cancel</button>
-    <button class="btn primary" onclick="saveJob()">Save</button>`;
-  renderStageList();
-  document.getElementById("tasks-section").style.display="block";
-  document.getElementById("task-inp").value="";
-  loadTasks(job.name);
+  document.getElementById("date-picker-box").style.display="none";
+  const evtStatus=document.getElementById("event-status");
+  if(job.eventId&&job.eventDate){
+    evtStatus.textContent="Calendar event set: "+fmtDate(job.eventDate);
+    evtStatus.className="event-status show";
+  } else {
+    evtStatus.className="event-status";
+  }
+  document.getElementById("modal-btns").innerHTML=buildModalBtns(job);
+  renderStageList(job.stage);
   document.getElementById("overlay").classList.add("open");
+}
+
+function buildModalBtns(job){
+  let btns=`<button class="btn danger" onclick="deleteJob()">Delete</button>
+    <button class="btn" onclick="closeModal()">Cancel</button>`;
+  if(job&&job.eventId){
+    btns+=`<button class="btn success" onclick="markComplete()">Mark complete</button>`;
+  } else {
+    btns+=`<button class="btn primary" onclick="saveJob()">Save</button>`;
+  }
+  return btns;
 }
 
 function openAdd(){
@@ -468,11 +423,12 @@ function openAdd(){
   document.getElementById("name-inp").value="";
   document.getElementById("address-inp").value="";
   document.getElementById("notes-inp").value="";
-  document.getElementById("tasks-section").style.display="none";
+  document.getElementById("date-picker-box").style.display="none";
+  document.getElementById("event-status").className="event-status";
   document.getElementById("modal-btns").innerHTML=`
     <button class="btn" onclick="closeModal()">Cancel</button>
     <button class="btn primary" onclick="saveJob()">Add customer</button>`;
-  renderStageList();
+  renderStageList(0);
   document.getElementById("overlay").classList.add("open");
   setTimeout(()=>document.getElementById("name-inp").focus(),80);
 }
@@ -489,12 +445,50 @@ async function saveJob(){
   const notes=document.getElementById("notes-inp").value.trim();
   let job;
   if(isAdding){
-    job={id:nextId++,name,stage:tempStage,address,notes,updatedAt:new Date().toISOString()};
+    job={id:nextId++,name,stage:tempStage,address,notes,updatedAt:new Date().toISOString(),eventId:"",taskId:"",eventDate:""};
     jobs.push(job);
-  }else{
+  } else {
     job=jobs.find(j=>j.id===editingId);
-    if(job){job.name=name;job.address=address;job.stage=tempStage;job.notes=notes;job.updatedAt=new Date().toISOString();}
+    if(job){
+      // If moving away from a cal stage, complete old event
+      if(job.eventId && job.stage!==tempStage){
+        await completeBoth(job.eventId, job.taskId);
+        job.eventId="";job.taskId="";job.eventDate="";
+      }
+      job.name=name;job.address=address;job.stage=tempStage;job.notes=notes;job.updatedAt=new Date().toISOString();
+    }
   }
+
+  // Create calendar event if this stage requires it
+  if(CAL_STAGES.has(tempStage)){
+    const dateVal=document.getElementById("event-date-inp").value;
+    const titleVal=document.getElementById("event-title-inp").value||name;
+    if(dateVal){
+      setBadge("syncing","Creating calendar event...");
+      const calResult=await createBoth({
+        title:titleVal,
+        date:new Date(dateVal).toISOString(),
+        duration:60,
+        description:"Hart's Septic — "+STAGES.find(s=>s.id===tempStage).label,
+        location:address
+      });
+      if(calResult&&calResult.eventId){job.eventId=calResult.eventId;job.taskId=calResult.taskId||"";job.eventDate=new Date(dateVal).toISOString();}
+    }
+  }
+
+  closeModal();renderAll();
+  await syncJob(job);
+}
+
+async function markComplete(){
+  const job=jobs.find(j=>j.id===editingId);
+  if(!job)return;
+  // Complete the calendar event
+  if(job.eventId) await completeBoth(job.eventId, job.taskId);
+  // Advance stage by 1
+  if(job.stage<STAGES.length-1) job.stage++;
+  job.eventId="";job.taskId="";job.eventDate="";
+  job.updatedAt=new Date().toISOString();
   closeModal();renderAll();
   await syncJob(job);
 }
